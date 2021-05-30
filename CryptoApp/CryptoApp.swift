@@ -17,7 +17,7 @@ struct CryptoApp: App {
                 HomeView()
                     .navigationBarHidden(true)
             }
-            .wenvironmentObject(vm)
+            .environmentObject(vm)
         }
     }
 }
