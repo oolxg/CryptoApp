@@ -21,7 +21,7 @@ struct HomeView: View {
             VStack {
                 homeHeader
 
-               columnTitles
+                columnTitles
 
                 if !showPortfolio {
                     allCoinsList
