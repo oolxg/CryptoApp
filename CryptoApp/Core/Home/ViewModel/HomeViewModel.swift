@@ -25,12 +25,14 @@ class HomeViewModel: ObservableObject {
     }
     
     func addSubscribers() {
-        coinDataService
-            .$allCoins
-            .sink { [weak self] coins in
-                self?.allCoints = coins
-            }
-            .store(in: &cancellables)
+       $searchText
+        .debounce(for: .seconds(0.5), scheduler: DispatchQueue.main)
+        .combineLatest(coinDataService.$allCoins)
+        .map(filterCoins)
+        .sink { [weak self] coins in
+            self?.allCoints = coins
+        }
+        .store(in: &cancellables)
         
         // update marketData
         marketDataService
@@ -40,6 +42,17 @@ class HomeViewModel: ObservableObject {
                 self?.stats = stats
             }
             .store(in: &cancellables)
+    }
+    
+    private func filterCoins(searchText: String, coins: [Coin]) -> [Coin] {
+        guard !searchText.isEmpty else { return coins }
+        
+        let lowercased = searchText.lowercased()
+        return coins.filter { coin -> Bool in
+            coin.name.lowercased().contains(lowercased) ||
+                coin.symbol.lowercased().contains(lowercased) ||
+                coin.id.lowercased().contains(lowercased)
+        }
     }
     
     private func mapGlobalMarketData(marketDataModel: MarketData?) -> [Statistic] {
