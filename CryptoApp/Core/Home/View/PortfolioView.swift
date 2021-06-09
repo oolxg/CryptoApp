@@ -42,6 +42,11 @@ struct PortfolioView: View {
             })
         }
         .accentColor(.theme.accent)
+        .onChange(of:  homeVM.searchText) { value in
+            if value == "" {
+                removeSelectedCoin()
+            }
+        }
     }
 }
 
