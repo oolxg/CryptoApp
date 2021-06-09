@@ -13,7 +13,6 @@ class PortfolioViewModel: ObservableObject {
     
     private init () { }
     
-    @Published var searchText: String = ""
     @Published var selectedCoin: Coin? = nil
     @Published var coinsQuantityText: String = ""
     @Published var showCheckmark: Bool = false
