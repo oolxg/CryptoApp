@@ -30,7 +30,10 @@ struct PortfolioView: View {
             .navigationTitle("Edit portfolio")
             .toolbar(content: {
                 ToolbarItem(placement: .navigationBarLeading) {
-                    XMarkButton(presentationMode: presentationMode)
+                    XMarkButton {
+                        homeVM.searchText = ""
+                        presentationMode.wrappedValue.dismiss()
+                    }
                 }
                 
                 ToolbarItem(placement: .navigationBarTrailing) {
