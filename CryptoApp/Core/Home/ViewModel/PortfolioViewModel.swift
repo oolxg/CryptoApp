@@ -18,12 +18,6 @@ class PortfolioViewModel: ObservableObject {
     @Published var coinsQuantityText: String = ""
     @Published var showCheckmark: Bool = false
     
-    
-    func removeSelectedCoin() {
-        selectedCoin = nil
-        searchText = ""
-    }
-    
     func getCurrentValueOfHoldings() -> Double {
         if let quantity = coinsQuantityText.asDouble() {
             return quantity * (selectedCoin?.currentPrice ?? 0)

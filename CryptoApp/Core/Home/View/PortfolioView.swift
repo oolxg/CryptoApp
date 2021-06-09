@@ -122,13 +122,18 @@ extension PortfolioView {
         }
     }
     
+    private func removeSelectedCoin() {
+        portfolioVM.selectedCoin = nil
+        homeVM.searchText = ""
+    }
+    
     private func saveButtonPressed() {
         guard let coin = portfolioVM.selectedCoin else { return }
         
         
         withAnimation(.easeIn) {
             portfolioVM.showCheckmark = true
-            portfolioVM.removeSelectedCoin()
+            removeSelectedCoin()
         }
         
         // hide keyboard
