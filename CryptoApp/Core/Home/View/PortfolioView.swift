@@ -41,6 +41,7 @@ struct PortfolioView: View {
                 }
             })
         }
+        .accentColor(.theme.accent)
     }
 }
 
