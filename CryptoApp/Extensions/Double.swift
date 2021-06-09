@@ -37,7 +37,7 @@ extension Double {
     /// Convert 0.123456 to $0.12
     /// ```
     
-    func asCurrencyWith2Digitals() -> String {
+    func asCurrencyWith2Decimals() -> String {
         let num = NSNumber(value: self)
         return currencyFormatter2Decimals.string(from: num) ?? "$0.00"
     }
@@ -70,7 +70,7 @@ extension Double {
     /// Convert 0.123456 to $0.123456
     /// ```
     
-    func asCurrencyWith6Digitals() -> String {
+    func asCurrencyWith6Decimals() -> String {
         let num = NSNumber(value: self)
         return currencyFormatter.string(from: num) ?? "$0.00"
     }
