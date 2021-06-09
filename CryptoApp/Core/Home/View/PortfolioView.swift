@@ -11,8 +11,7 @@ struct PortfolioView: View {
     
     @Environment(\.presentationMode) var presentationMode
     @EnvironmentObject var homeVM: HomeViewModel
-    @StateObject var portfolioVM = PortfolioViewModel.shared
-    
+    @StateObject var portfolioVM = PortfolioViewModel()
     
     var body: some View {
         NavigationView {
@@ -42,26 +41,31 @@ struct PortfolioView: View {
             })
         }
         .accentColor(.theme.accent)
-        .onChange(of:  homeVM.searchText) { value in
+        .onChange(of: homeVM.searchText) { value in
             if value == "" {
-                removeSelectedCoin()
+                portfolioVM.removeSelectedCoin()
             }
         }
     }
 }
 
-
 extension PortfolioView {
+    private var searchListCoins: [Coin] {
+        // if there're coins in portfolio and search string is empty, than will be show allCoins,
+        // otherwise will show portfolio coins
+        homeVM.searchText.isEmpty && !homeVM.portfolioCoins.isEmpty ? homeVM.portfolioCoins : homeVM.allCoints
+    }
+    
     private var coinLogoList: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             LazyHStack(spacing: 10) {
-                ForEach(homeVM.allCoints) { coin in
+                ForEach(searchListCoins) { coin in
                     CoinLogoView(coin: coin)
                         .frame(width: 75)
                         .padding(4)
                         .onTapGesture {
                             withAnimation(.easeIn) {
-                                portfolioVM.selectedCoin = coin
+                                updateSelectedCoins(coin: coin)
                             }
                         }
                         .background(
@@ -131,18 +135,29 @@ extension PortfolioView {
         }
     }
     
-    private func removeSelectedCoin() {
-        portfolioVM.selectedCoin = nil
-        homeVM.searchText = ""
+    private func updateSelectedCoins(coin: Coin) {
+        portfolioVM.selectedCoin = coin
+        
+        if let portfolioCoin = homeVM.portfolioCoins.first(where: { $0.id == coin.id }),
+           let amount = portfolioCoin.currentHoldings {
+            portfolioVM.coinsQuantityText = "\(amount)"
+        } else {
+            portfolioVM.coinsQuantityText = ""
+
+        }
+        
     }
     
     private func saveButtonPressed() {
-        guard let coin = portfolioVM.selectedCoin else { return }
+        guard let coin = portfolioVM.selectedCoin,
+              let amount = portfolioVM.coinsQuantityText.asDouble() else { return }
+        
+        homeVM.updatePortfolio(coin: coin, amount: amount)
         
         
         withAnimation(.easeIn) {
             portfolioVM.showCheckmark = true
-            removeSelectedCoin()
+            portfolioVM.removeSelectedCoin()
         }
         
         // hide keyboard
