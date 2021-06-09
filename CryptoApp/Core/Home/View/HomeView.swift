@@ -8,9 +8,9 @@
 import SwiftUI
 
 struct HomeView: View {
-    @State private var showPortfolio = false
-    @EnvironmentObject private var vm: HomeViewModel // animate button
+    @EnvironmentObject private var vm: HomeViewModel
     @State private var showPortfolioView: Bool = false // show new shit
+    @State private var showPortfolio = false // animate button
 
     var body: some View {
         ZStack {
