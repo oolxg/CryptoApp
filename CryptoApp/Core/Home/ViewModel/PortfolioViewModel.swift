@@ -6,13 +6,9 @@
 //
 
 import Foundation
-
+import Combine
 
 class PortfolioViewModel: ObservableObject {
-    static let shared = PortfolioViewModel()
-    
-    private init () { }
-    
     @Published var selectedCoin: Coin? = nil
     @Published var coinsQuantityText: String = ""
     @Published var showCheckmark: Bool = false
@@ -23,5 +19,8 @@ class PortfolioViewModel: ObservableObject {
         }
         return 0
     }
-    
+
+    func removeSelectedCoin() {
+        selectedCoin = nil
+    }
 }
