@@ -96,9 +96,9 @@ class HomeViewModel: ObservableObject {
             case .rankReversed, .holdingsReversed:
                 coins.sort(by: { $0.rank > $1.rank })
             case .price:
-                coins.sort(by: { $0.currentPrice < $1.currentPrice })
-            case .priceReversed:
                 coins.sort(by: { $0.currentPrice > $1.currentPrice })
+            case .priceReversed:
+                coins.sort(by: { $0.currentPrice < $1.currentPrice })
                 
         }
     }
