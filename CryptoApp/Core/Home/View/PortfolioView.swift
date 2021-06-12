@@ -53,7 +53,7 @@ extension PortfolioView {
     private var searchListCoins: [Coin] {
         // if there're coins in portfolio and search string is empty, than will be show allCoins,
         // otherwise will show portfolio coins
-        homeVM.searchText.isEmpty && !homeVM.portfolioCoins.isEmpty ? homeVM.portfolioCoins : homeVM.allCoints
+        homeVM.searchText.isEmpty && !homeVM.portfolioCoins.isEmpty ? homeVM.portfolioCoins : homeVM.allCoins
     }
     
     private var coinLogoList: some View {

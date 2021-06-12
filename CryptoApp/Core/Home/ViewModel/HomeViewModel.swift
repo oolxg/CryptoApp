@@ -10,7 +10,7 @@ import SwiftUI
 import Combine
 
 class HomeViewModel: ObservableObject {
-    @Published var allCoints: [Coin] = []
+    @Published var allCoins: [Coin] = []
     @Published var portfolioCoins: [Coin] = []
     @Published var searchText: String = ""
     @Published var isLoading: Bool = false
@@ -53,7 +53,7 @@ class HomeViewModel: ObservableObject {
             .combineLatest(coinDataService.$allCoins, $sortOption)
             .map(filterAndSortCoins)
             .sink { [weak self] coins in
-                self?.allCoints = coins
+                self?.allCoins = coins
             }
             .store(in: &cancellables)
         
@@ -68,7 +68,7 @@ class HomeViewModel: ObservableObject {
             .store(in: &cancellables)
         
         // load coins from CoreData
-        $allCoints
+        $allCoins
             .combineLatest(portfolioDataService.$savedEntities)
             .map(mapAllCoinsToPortfolioCoins)
             .sink { [weak self] coins in
@@ -99,7 +99,6 @@ class HomeViewModel: ObservableObject {
                 coins.sort(by: { $0.currentPrice > $1.currentPrice })
             case .priceReversed:
                 coins.sort(by: { $0.currentPrice < $1.currentPrice })
-                
         }
     }
     
@@ -121,7 +120,7 @@ class HomeViewModel: ObservableObject {
     }
     
     private func mapAllCoinsToPortfolioCoins(allCoins: [Coin], portfolioCoins: [Portfolio]) -> [Coin] {
-        allCoints.compactMap { coin -> Coin? in
+        allCoins.compactMap { coin -> Coin? in
             guard let entity = portfolioCoins.first(where: { $0.coinID == coin.id }) else {
                 return nil
             }
