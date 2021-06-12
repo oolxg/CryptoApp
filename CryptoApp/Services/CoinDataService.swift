@@ -11,21 +11,10 @@ import Combine
 class CoinDataService {
     @Published var allCoins: [Coin] = []
     
-    private let updateFrequency: TimeInterval =  60 / 8 // update frequency in seconds
     private var coinSubscription: AnyCancellable?
-    private var updateCoinSubscription: AnyCancellable?
     
     init() {
         getCoins()
-        setSubrciptions()
-    }
-    
-    private func setSubrciptions() {
-        updateCoinSubscription = Timer.publish(every: updateFrequency, on: .main, in: .common)
-            .autoconnect()
-            .sink { [weak self] _ in
-                self?.getCoins()
-            }
     }
     
     func getCoins() {
