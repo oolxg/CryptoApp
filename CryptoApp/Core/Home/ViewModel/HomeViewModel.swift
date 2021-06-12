@@ -106,9 +106,9 @@ class HomeViewModel: ObservableObject {
     private func sortPortfolioCoinsIfNeeded(coins: [Coin]) -> [Coin] {
         switch sortOption {
             case .holdings:
-                return coins.sorted(by: { $0.currentHoldingsValue > $1.currentHoldingsValue })
-            default:
                 return coins.sorted(by: { $0.currentHoldingsValue < $1.currentHoldingsValue })
+            default:
+                return coins.sorted(by: { $0.currentHoldingsValue > $1.currentHoldingsValue })
         }
     }
     
