@@ -21,15 +21,82 @@ struct DetailLoadingView: View {
 
 struct DetailView: View {
     
-    let coin: Coin
+    @StateObject var vm: DetailViewModel
+    private let columns: [GridItem] = [
+        GridItem(.flexible()),
+        GridItem(.flexible()),
+    ]
+    private var spacing: CGFloat = 30
+    
+    init(coin: Coin) {
+        _vm = .init(wrappedValue: DetailViewModel(coin: coin))
+    }
     
     var body: some View {
-        Text(coin.name)
+        ScrollView {
+            VStack(spacing: 20) {
+                Text("")
+                    .frame(height: 200)
+                
+                overview
+                
+                details
+            }
+            .padding()
+        }
+        .navigationTitle(vm.coin.name)
     }
 }
 
 struct DetailView_Previews: PreviewProvider {
     static var previews: some View {
-        DetailView(coin: dev.coin)
+        NavigationView {
+            DetailView(coin: dev.coin)
+        }
+    }
+}
+
+
+extension DetailView {
+    private var details: some View {
+        Group {
+            Text("Details")
+                .font(.title)
+                .bold()
+                .foregroundColor(.theme.accent)
+                .frame(maxWidth: .infinity, alignment: .leading)
+            
+            Divider()
+            
+            LazyVGrid(columns: columns,
+                      alignment: .leading,
+                      spacing: spacing) {
+                
+                ForEach(vm.detailStatistic) { stat in
+                    StatisticView(stat: stat)
+                }
+            }
+        }
+    }
+    
+    private var overview: some View {
+        Group {
+            Text("Overview")
+                .font(.title)
+                .bold()
+                .foregroundColor(.theme.accent)
+                .frame(maxWidth: .infinity, alignment: .leading)
+            
+            Divider()
+            
+            LazyVGrid(columns: columns,
+                      alignment: .leading,
+                      spacing: spacing) {
+                
+                ForEach(vm.overviewStatistic) { stat in
+                    StatisticView(stat: stat)
+                }
+            }
+        }
     }
 }
