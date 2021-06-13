@@ -11,7 +11,6 @@ struct PortfolioView: View {
     
     @Environment(\.presentationMode) var presentationMode
     @EnvironmentObject var homeVM: HomeViewModel
-    @StateObject var portfolioVM = PortfolioViewModel()
     
     var body: some View {
         NavigationView {
@@ -21,7 +20,7 @@ struct PortfolioView: View {
                     
                     coinLogoList
                     
-                    if portfolioVM.selectedCoin != nil {
+                    if homeVM.selectedCoin != nil {
                         portfolioInputSection
                     }
                 }
@@ -43,7 +42,7 @@ struct PortfolioView: View {
         .accentColor(.theme.accent)
         .onChange(of: homeVM.searchText) { value in
             if value == "" {
-                portfolioVM.removeSelectedCoin()
+                homeVM.removeSelectedCoin()
             }
         }
     }
@@ -70,7 +69,7 @@ extension PortfolioView {
                         }
                         .background(
                             RoundedRectangle(cornerRadius: 10)
-                                .stroke(portfolioVM.selectedCoin?.id == coin.id ?
+                                .stroke(homeVM.selectedCoin?.id == coin.id ?
                                             Color.theme.green : .clear,
                                         lineWidth: 1))
                 }
@@ -83,11 +82,11 @@ extension PortfolioView {
     private var portfolioInputSection: some View {
         VStack(spacing: 20) {
             HStack {
-                Text("Current price of \(portfolioVM.selectedCoin?.symbol.uppercased() ?? ""):")
+                Text("Current price of \(homeVM.selectedCoin?.symbol.uppercased() ?? ""):")
                 
                 Spacer()
                 
-                Text("\(portfolioVM.selectedCoin?.currentPrice.asCurrencyWith6Decimals() ?? "")")
+                Text("\(homeVM.selectedCoin?.currentPrice.asCurrencyWith6Decimals() ?? "")")
             }
             
             Divider()
@@ -97,7 +96,7 @@ extension PortfolioView {
                 
                 Spacer()
                 
-                TextField("Ex: 1.4", text: $portfolioVM.coinsQuantityText)
+                TextField("Ex: 1.4", text: $homeVM.coinsQuantityText)
                     .multilineTextAlignment(.trailing)
                     .keyboardType(.decimalPad)
             }
@@ -109,7 +108,7 @@ extension PortfolioView {
                 
                 Spacer()
                 
-                Text(portfolioVM.getCurrentValueOfHoldings().asCurrencyWith2Decimals())
+                Text(homeVM.getCurrentValueOfHoldings().asCurrencyWith2Decimals())
             }
         }
         .animation(.none)
@@ -120,11 +119,11 @@ extension PortfolioView {
     private var trailingNavbarButton: some View {
         HStack {
             
-            if portfolioVM.showCheckmark {
+            if homeVM.showCheckmark {
                 Image(systemName: "checkmark")
             }
             
-            if portfolioVM.selectedCoin != nil && portfolioVM.selectedCoin?.currentHoldings != portfolioVM.coinsQuantityText.asDouble() {
+            if homeVM.selectedCoin != nil && homeVM.selectedCoin?.currentHoldings != homeVM.coinsQuantityText.asDouble() {
                 Button(action: {
                     saveButtonPressed()
                 }, label: {
@@ -136,28 +135,28 @@ extension PortfolioView {
     }
     
     private func updateSelectedCoins(coin: Coin) {
-        portfolioVM.selectedCoin = coin
+        homeVM.selectedCoin = coin
         
         if let portfolioCoin = homeVM.portfolioCoins.first(where: { $0.id == coin.id }),
            let amount = portfolioCoin.currentHoldings {
-            portfolioVM.coinsQuantityText = "\(amount)"
+            homeVM.coinsQuantityText = "\(amount)"
         } else {
-            portfolioVM.coinsQuantityText = ""
+            homeVM.coinsQuantityText = ""
 
         }
         
     }
     
     private func saveButtonPressed() {
-        guard let coin = portfolioVM.selectedCoin,
-              let amount = portfolioVM.coinsQuantityText.asDouble() else { return }
+        guard let coin = homeVM.selectedCoin,
+              let amount = homeVM.coinsQuantityText.asDouble() else { return }
         
         homeVM.updatePortfolio(coin: coin, amount: amount)
         
         
         withAnimation(.easeIn) {
-            portfolioVM.showCheckmark = true
-            portfolioVM.removeSelectedCoin()
+            homeVM.showCheckmark = true
+            homeVM.removeSelectedCoin()
         }
         
         // hide keyboard
@@ -166,7 +165,7 @@ extension PortfolioView {
         // hide checkmark
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
             withAnimation(.easeOut) {
-                portfolioVM.showCheckmark = false
+                homeVM.showCheckmark = false
             }
         }
     }

@@ -16,6 +16,9 @@ class HomeViewModel: ObservableObject {
     @Published var isLoading: Bool = false
     @Published var stats: [Statistic] = []
     @Published var sortOption: SortOption = .holdings
+    @Published var selectedCoin: Coin? = nil
+    @Published var coinsQuantityText: String = ""
+    @Published var showCheckmark: Bool = false
     
     private let coinDataService = CoinDataService()
     private let marketDataService = MarketDataService()
@@ -42,6 +45,17 @@ class HomeViewModel: ObservableObject {
         coinDataService.getCoins()
         marketDataService.getData()
         HapticManager.notification(type: .success)
+    }
+    
+    func getCurrentValueOfHoldings() -> Double {
+        if let quantity = coinsQuantityText.asDouble() {
+            return quantity * (selectedCoin?.currentPrice ?? 0)
+        }
+        return 0
+    }
+    
+    func removeSelectedCoin() {
+        selectedCoin = nil
     }
     
     // MARK: Private
