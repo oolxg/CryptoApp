@@ -9,7 +9,6 @@ import SwiftUI
 
 struct HomeView: View {
     @EnvironmentObject private var vm: HomeViewModel
-    @EnvironmentObject private var portfolioVM: PortfolioViewModel
     @State private var showPortfolioView: Bool = false // show new sheet
     @State private var showPortfolio: Bool = false // animate button
     @State private var showDetailView: Bool = false
@@ -30,9 +29,7 @@ struct HomeView: View {
                 
                 HomeStatisticView(showPortfolio: $showPortfolio)
                 
-                SearchBarView(searchText: showPortfolio ?
-                                $portfolioVM.searchText :
-                                $vm.searchText)
+                SearchBarView(searchText: $vm.searchText)
                 
                 columnTitles
                 
@@ -108,7 +105,7 @@ extension HomeView {
     
     private var portfolioCoinsList: some View {
         List {
-            ForEach(portfolioVM.portfolioCoinsToDisplay) { coin in
+            ForEach(vm.portfolioCoins) { coin in
                 CoinRowView(coin: coin, showHoldingsColumn: true)
                     .listRowInsets(.init(top: 10, leading: 0, bottom: 10, trailing: 10))
                     .onTapGesture {

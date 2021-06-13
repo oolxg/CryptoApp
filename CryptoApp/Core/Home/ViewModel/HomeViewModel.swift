@@ -38,6 +38,7 @@ class HomeViewModel: ObservableObject {
     
     func updatePortfolio(coin: Coin, amount: Double) {
         portfolioDataService.updatePortfolio(coin: coin, amount: amount)
+        searchText = ""
     }
     
     func reloadData() {
@@ -61,7 +62,7 @@ class HomeViewModel: ObservableObject {
     // MARK: Private
     
     private func addSubscribers() {
-        // search in all coins
+        // search in all coins and load it from API
         $searchText
             .debounce(for: .seconds(0.5), scheduler: DispatchQueue.main)
             .combineLatest(coinDataService.$allCoins, $sortOption)
@@ -74,8 +75,8 @@ class HomeViewModel: ObservableObject {
         // search in portfolio coins
         $searchText
             .debounce(for: .seconds(0.5), scheduler: DispatchQueue.main)
-            .combineLatest($portfolioCoins)
-            .map(filterCoins)
+            .combineLatest($portfolioCoins, $sortOption)
+            .map(filterAndSortCoins)
             .sink { [weak self] coins in
                 self?.portfolioCoins = coins
             }
@@ -97,18 +98,23 @@ class HomeViewModel: ObservableObject {
             .combineLatest($portfolioCoins)
             .map(mapGlobalMarketData)
             .sink { [weak self] stats in
-                self?.stats = stats
-                self?.isLoading = false
+                guard let self = self else { return }
+                self.stats = stats
+                self.isLoading = false
             }
             .store(in: &cancellables)
     }
     
     private func sortCoins(sort: SortOption, coins: inout [Coin]) {
         switch sort {
-            case .rank, .holdings:
+            case .rank:
                 coins.sort(by: { $0.rank < $1.rank })
-            case .rankReversed, .holdingsReversed:
+            case .rankReversed:
                 coins.sort(by: { $0.rank > $1.rank })
+            case .holdings:
+                coins.sort(by: { $0.currentHoldingsValue < $1.currentHoldingsValue })
+            case .holdingsReversed:
+                coins.sort(by: { $0.currentHoldingsValue > $1.currentHoldingsValue })
             case .price:
                 coins.sort(by: { $0.currentPrice > $1.currentPrice })
             case .priceReversed:
