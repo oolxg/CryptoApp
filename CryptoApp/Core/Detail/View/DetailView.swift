@@ -33,18 +33,26 @@ struct DetailView: View {
     }
     
     var body: some View {
-        ScrollView {
-            VStack(spacing: 20) {
-                Text("")
-                    .frame(height: 200)
-                
-                overview
-                
-                details
+        ScrollView(showsIndicators: false) {
+            VStack {
+                ChartView(coin: vm.coin)
+                    .padding(.vertical )
+
+                VStack(spacing: 20) {
+                    
+                    overview
+                    
+                    details
+                }
+                .padding()
             }
-            .padding()
         }
         .navigationTitle(vm.coin.name)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarTrailing) {
+               navigationBarTrailingItem
+            }
+        }
     }
 }
 
@@ -58,6 +66,17 @@ struct DetailView_Previews: PreviewProvider {
 
 
 extension DetailView {
+    private var navigationBarTrailingItem: some View {
+        HStack {
+            Text(vm.coin.symbol.uppercased())
+                .font(.headline)
+                .foregroundColor(.theme.secondaryText)
+            
+            CoinImageView(coin: vm.coin)
+                .frame(width: 30)
+        }
+    }
+    
     private var details: some View {
         Group {
             Text("Details")
