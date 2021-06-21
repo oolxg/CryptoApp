@@ -30,4 +30,8 @@ extension String {
         
         return nil
     }
+    
+    var removingHTMLOccurencies:  String {
+        self.replacingOccurrences(of: "<[^>]+>", with: "", options: .regularExpression, range: nil)
+    }
 }
