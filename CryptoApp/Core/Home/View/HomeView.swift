@@ -10,7 +10,7 @@ import SwiftUI
 struct HomeView: View {
     @EnvironmentObject private var vm: HomeViewModel
     @State private var showPortfolioView: Bool = false // show new sheet
-    @State private var showPortfolio: Bool = false // animate button
+    @State private var showPortfolio: Bool = false     // animate button
     @State private var showDetailView: Bool = false
     @State private var selectedCoin: Coin? = nil
     @State private var showSettingsView: Bool = false
