@@ -13,6 +13,7 @@ struct AppInfoView: View {
     let coinGeckoURL = URL(string: "https://coingecko.com")!
     let personalURL = URL(string: "https://mkwpnz.moe")!
     let telegegramURL = URL(string: "https://t.me/mkpwnz")!
+    let githubURL = URL(string: "https://github.com/IceF0xx/")!
     
     var body: some View {
         NavigationView {
@@ -28,7 +29,7 @@ struct AppInfoView: View {
             .font(.headline)
             .accentColor(.blue)
             .listStyle(GroupedListStyle())
-            .navigationTitle("Settings")
+            .navigationTitle("About")
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     XMarkButton {
@@ -57,7 +58,7 @@ extension AppInfoView {
                     .frame(width: 100, height: 100)
                     .clipShape(RoundedRectangle(cornerRadius: 20))
                 
-                Text("This app was made by @mkpwnz with help of YouTube video-course. It uses MVVM, Combine, CoreData.")
+                Text("This app was made by @mkpwnz(me) with help of YouTube video-course. It uses MVVM, Combine, CoreData.")
                     .font(.callout)
                     .fontWeight(.medium)
                     .foregroundColor(.theme.accent)
@@ -85,20 +86,21 @@ extension AppInfoView {
     
     private var developerInfo: some View {
         Section(header: Text("About me")) {
-            VStack(alignment: .leading) {
+            VStack {
                 Image("me")
                     .resizable()
                     .scaledToFit()
                     .frame(height: 200)
-                    .clipShape(RoundedRectangle(cornerRadius: 20))
+                    .clipShape(Circle())
                 
-                Text("My name is Oleg Mihajlov and this app was made by me. Right now i'm a junior iOS developer, who is looking for a job.")
+                Text("My name is Oleg Mihajlov and this app was made by me. I'm a junior iOS developer, who is looking for a job.")
                     .font(.callout)
                     .fontWeight(.medium)
                     .foregroundColor(.theme.accent)
             }
             
             Link("Contact me on Telegram", destination: telegegramURL)
+            Link("My Github", destination: githubURL)
         }
     }
 }
