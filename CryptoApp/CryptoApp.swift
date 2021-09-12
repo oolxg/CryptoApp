@@ -20,7 +20,7 @@ struct CryptoApp: App {
     var body: some Scene {
         WindowGroup {
             if showLaunchScreen {
-                LaunchView(showLaunchScreen: $showLaunchScreen)
+                LaunchView()
                     .onAppear {
                         DispatchQueue.main.asyncAfter(deadline: .now() + Double.random(in: 0.5..<1.8)) {
                             withAnimation(.linear(duration: 0.5)) {

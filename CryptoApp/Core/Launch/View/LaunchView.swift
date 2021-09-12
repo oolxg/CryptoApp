@@ -10,7 +10,6 @@ import SwiftUI
 struct LaunchView: View {
     @State private var loadingText = "Loading coins..."
     @State private var textOpacity = 1.0
-    @Binding var showLaunchScreen: Bool
     
     var body: some View {
         ZStack {
@@ -39,6 +38,6 @@ struct LaunchView: View {
 
 struct LaunchView_Previews: PreviewProvider {
     static var previews: some View {
-        LaunchView(showLaunchScreen: .constant(true))
+        LaunchView()
     }
 }
