@@ -40,8 +40,14 @@ struct HomeView: View {
                 }
                 
                 if showPortfolio {
-                    portfolioCoinsList
-                        .transition(.move(edge: .trailing))
+                    ZStack(alignment: .top) {
+                        if vm.portfolioCoins.isEmpty && vm.searchText.isEmpty {
+                            portfolioEmptyText
+                        } else {
+                            portfolioCoinsList
+                        }
+                    }
+                    .transition(.move(edge: .trailing))
                 }
                 
                 Spacer(minLength: 0)
@@ -118,8 +124,25 @@ extension HomeView {
                         segue(coin: coin)
                     }
             }
+            .onDelete(perform: removeCoinsFromPortfolio)
         }
         .listStyle(PlainListStyle())
+    }
+    
+    private func removeCoinsFromPortfolio(at offsets: IndexSet) {
+        let coinsToUpdate = offsets.map { vm.portfolioCoins[$0] }
+        for coin in coinsToUpdate {
+            vm.updatePortfolio(coin: coin, amount: 0)
+        }
+    }
+
+    private var portfolioEmptyText: some View {
+        Text("No coins in portfolio. \n Maybe should add something? 🤔")
+            .font(.callout)
+            .foregroundColor(.theme.accent)
+            .fontWeight(.medium)
+            .multilineTextAlignment(.center)
+            .padding(50)
     }
     
     private func segue(coin: Coin) {

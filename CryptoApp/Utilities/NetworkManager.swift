@@ -26,6 +26,7 @@ class NetworkManager {
     static func download(from url: URL) -> AnyPublisher<Data, Error> {
         URLSession.shared.dataTaskPublisher(for: url)
             .tryMap({ try handleURLRespons(output: $0, url: url) })
+            .retry(3)
             .eraseToAnyPublisher()
     }
     
