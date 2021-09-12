@@ -162,7 +162,7 @@ extension DetailView {
     }
     
     private var websiteSection: some View {
-    VStack(alignment: .leading, spacing: 20){
+        VStack(alignment: .leading, spacing: 20){
             
             if let websiteLink = vm.websiteURL,
                let url = URL(string: websiteLink) {

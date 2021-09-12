@@ -28,7 +28,7 @@ class PortfolioDataService {
         
     }
     
-    // MARK: Public
+    // MARK:- Public
     
     func updatePortfolio(coin: Coin, amount: Double) {
         if let entity = savedEntities.first(where: { $0.coinID == coin.id }) {
@@ -42,7 +42,7 @@ class PortfolioDataService {
         }
     }
     
-    // MARK: Private
+    // MARK:- Private
     
     private func getPortfolio() {
         let request = NSFetchRequest<Portfolio>(entityName: entityName)
