@@ -9,6 +9,8 @@ import Foundation
 import SwiftUI
 import Combine
 
+// currently not in use
+// reason: AsyncImage
 class CoinImageViewModel: ObservableObject {
     @Published var image: UIImage? = nil
     @Published var isLoading = false

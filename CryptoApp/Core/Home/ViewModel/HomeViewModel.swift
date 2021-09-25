@@ -59,10 +59,10 @@ class HomeViewModel: ObservableObject {
         selectedCoin = nil
     }
     
-    // MARK: Private
+    // MARK: - Private
     
     private func addSubscribers() {
-        // search in all coins and load it from API
+        // search in all coins or sort them or load coins from API
         $searchText
             .debounce(for: .seconds(0.5), scheduler: DispatchQueue.main)
             .combineLatest(coinDataService.$allCoins, $sortOption)

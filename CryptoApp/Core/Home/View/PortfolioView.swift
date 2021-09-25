@@ -8,19 +8,18 @@
 import SwiftUI
 
 struct PortfolioView: View {
-    
-    @Environment(\.presentationMode) var presentationMode
-    @EnvironmentObject var homeVM: HomeViewModel
+    @Environment(\.dismiss) private var dismiss
+    @EnvironmentObject private var vm: HomeViewModel
     
     var body: some View {
         NavigationView {
             ScrollView {
                 VStack(alignment: .leading, spacing: 0) {
-                    SearchBarView(searchText: $homeVM.searchText)
+                    SearchBarView(searchText: $vm.searchText)
                     
                     coinLogoList
                     
-                    if homeVM.selectedCoin != nil {
+                    if vm.selectedCoin != nil {
                         portfolioInputSection
                     }
                 }
@@ -29,8 +28,8 @@ struct PortfolioView: View {
             .toolbar(content: {
                 ToolbarItem(placement: .navigationBarLeading) {
                     XMarkButton {
-                        homeVM.searchText = ""
-                        presentationMode.wrappedValue.dismiss()
+                        vm.searchText = ""
+                        self.dismiss()
                     }
                 }
                 
@@ -40,9 +39,9 @@ struct PortfolioView: View {
             })
         }
         .accentColor(.theme.accent)
-        .onChange(of: homeVM.searchText) { value in
+        .onChange(of: vm.searchText) { value in
             if value == "" {
-                homeVM.removeSelectedCoin()
+                vm.removeSelectedCoin()
             }
         }
     }
@@ -52,7 +51,7 @@ extension PortfolioView {
     private var searchListCoins: [Coin] {
         // if there're coins in portfolio and search string is empty, than will be show allCoins,
         // otherwise will show portfolio coins
-        homeVM.searchText.isEmpty && !homeVM.portfolioCoins.isEmpty ? homeVM.portfolioCoins : homeVM.allCoins
+        vm.searchText.isEmpty && !vm.portfolioCoins.isEmpty ? vm.portfolioCoins : vm.allCoins
     }
     
     private var coinLogoList: some View {
@@ -69,7 +68,7 @@ extension PortfolioView {
                         }
                         .background(
                             RoundedRectangle(cornerRadius: 10)
-                                .stroke(homeVM.selectedCoin?.id == coin.id ?
+                                .stroke(vm.selectedCoin?.id == coin.id ?
                                             Color.theme.green : .clear,
                                         lineWidth: 1))
                 }
@@ -82,11 +81,11 @@ extension PortfolioView {
     private var portfolioInputSection: some View {
         VStack(spacing: 20) {
             HStack {
-                Text("Current price of \(homeVM.selectedCoin?.symbol.uppercased() ?? ""):")
+                Text("Current price of \(vm.selectedCoin?.symbol.uppercased() ?? ""):")
                 
                 Spacer()
                 
-                Text("\(homeVM.selectedCoin?.currentPrice.asCurrencyWith6Decimals() ?? "")")
+                Text("\(vm.selectedCoin?.currentPrice.asCurrencyWith6Decimals() ?? "")")
             }
             
             Divider()
@@ -96,7 +95,7 @@ extension PortfolioView {
                 
                 Spacer()
                 
-                TextField("Ex: 1.4", text: $homeVM.coinsQuantityText)
+                TextField("Ex: 1.4", text: $vm.coinsQuantityText)
                     .multilineTextAlignment(.trailing)
                     .keyboardType(.decimalPad)
             }
@@ -108,7 +107,7 @@ extension PortfolioView {
                 
                 Spacer()
                 
-                Text(homeVM.getCurrentValueOfHoldings().asCurrencyWith2Decimals())
+                Text(vm.getCurrentValueOfHoldings().asCurrencyWith2Decimals())
             }
         }
         .animation(.none)
@@ -119,11 +118,11 @@ extension PortfolioView {
     private var trailingNavbarButton: some View {
         HStack {
             
-            if homeVM.showCheckmark {
+            if vm.showCheckmark {
                 Image(systemName: "checkmark")
             }
             
-            if homeVM.selectedCoin != nil && homeVM.selectedCoin?.currentHoldings != homeVM.coinsQuantityText.asDouble() {
+            if vm.selectedCoin != nil && vm.selectedCoin?.currentHoldings != vm.coinsQuantityText.asDouble() {
                 Button(action: {
                     saveButtonPressed()
                 }, label: {
@@ -135,28 +134,28 @@ extension PortfolioView {
     }
     
     private func updateSelectedCoins(coin: Coin) {
-        homeVM.selectedCoin = coin
+        vm.selectedCoin = coin
         
-        if let portfolioCoin = homeVM.portfolioCoins.first(where: { $0.id == coin.id }),
+        if let portfolioCoin = vm.portfolioCoins.first(where: { $0.id == coin.id }),
            let amount = portfolioCoin.currentHoldings {
-            homeVM.coinsQuantityText = "\(amount)"
+            vm.coinsQuantityText = "\(amount)"
         } else {
-            homeVM.coinsQuantityText = ""
+            vm.coinsQuantityText = ""
 
         }
         
     }
     
     private func saveButtonPressed() {
-        guard let coin = homeVM.selectedCoin,
-              let amount = homeVM.coinsQuantityText.asDouble() else { return }
+        guard let coin = vm.selectedCoin,
+              let amount = vm.coinsQuantityText.asDouble() else { return }
         
-        homeVM.updatePortfolio(coin: coin, amount: amount)
+        vm.updatePortfolio(coin: coin, amount: amount)
         
         
         withAnimation(.easeIn) {
-            homeVM.showCheckmark = true
-            homeVM.removeSelectedCoin()
+            vm.showCheckmark = true
+            vm.removeSelectedCoin()
         }
         
         // hide keyboard
@@ -165,7 +164,7 @@ extension PortfolioView {
         // hide checkmark
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
             withAnimation(.easeOut) {
-                homeVM.showCheckmark = false
+                vm.showCheckmark = false
             }
         }
     }

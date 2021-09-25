@@ -1,9 +1,9 @@
-//
-//  Home.swift
-//  CryptoApp
-//
-//  Created by mk.pwnz on 26.05.2021.
-//
+    //
+    //  Home.swift
+    //  CryptoApp
+    //
+    //  Created by mk.pwnz on 26.05.2021.
+    //
 
 import SwiftUI
 
@@ -17,10 +17,13 @@ struct HomeView: View {
     
     var body: some View {
         ZStack {
-            // background
+                // background
             Color.theme.background
                 .ignoresSafeArea()
-                .sheet(isPresented: $showPortfolioView) {
+                .sheet(isPresented: $showPortfolioView, onDismiss: {
+                    vm.searchText = ""
+                    vm.selectedCoin = nil
+                }) {
                     PortfolioView()
                         .environmentObject(vm)
                 }
@@ -110,9 +113,23 @@ extension HomeView {
                     .onTapGesture {
                         segue(coin: coin)
                     }
+                    .swipeActions(allowsFullSwipe: true) {
+                        Button(action: {
+                            showPortfolioView = true
+                            vm.selectedCoin = coin
+                            vm.searchText = coin.symbol.uppercased()
+                        }, label: {
+                            Image(systemName: "plus")
+                        })
+                            .tint(.green)
+                        
+                    }
             }
         }
         .listStyle(PlainListStyle())
+        .refreshable {
+            vm.reloadData()
+        }
     }
     
     private var portfolioCoinsList: some View {
@@ -123,10 +140,31 @@ extension HomeView {
                     .onTapGesture {
                         segue(coin: coin)
                     }
+                    .swipeActions(allowsFullSwipe: true) {
+                        Button(action: {
+                            vm.updatePortfolio(coin: coin, amount: 0)
+                        }, label: {
+                            Image(systemName: "trash.fill")
+                        })
+                        .tint(.red)
+                        
+                        Button(action: {
+                            showPortfolioView = true
+                            vm.selectedCoin = coin
+                            vm.searchText = coin.symbol.uppercased()
+                            vm.coinsQuantityText = coin.currentHoldings?.asNumberString() ?? ""
+                        }, label: {
+                            Image(systemName: "gear")
+                        })
+                       
+                    }
             }
-            .onDelete(perform: removeCoinsFromPortfolio)
+            
         }
         .listStyle(PlainListStyle())
+        .refreshable {
+            vm.reloadData()
+        }
     }
     
     private func removeCoinsFromPortfolio(at offsets: IndexSet) {
@@ -135,7 +173,7 @@ extension HomeView {
             vm.updatePortfolio(coin: coin, amount: 0)
         }
     }
-
+    
     private var portfolioEmptyText: some View {
         Text("No coins in portfolio. \n Maybe should add something? 🤔")
             .font(.callout)
@@ -162,14 +200,14 @@ extension HomeView {
             
             columnTitlePrice
             
-            Button(action: {
-                withAnimation(.linear(duration: 2)) {
-                    vm.reloadData()
-                }
-            }, label: {
-                Image(systemName: "goforward")
-            })
-            .rotationEffect(Angle(degrees: vm.isLoading ? 360 : 0), anchor: .center)
+//            Button(action: {
+//                withAnimation(.linear(duration: 2)) {
+//                    vm.reloadData()
+//                }
+//            }, label: {
+//                Image(systemName: "goforward")
+//            })
+//                .rotationEffect(Angle(degrees: vm.isLoading ? 360 : 0), anchor: .center)
             
         }
         .font(.caption)
@@ -183,7 +221,7 @@ extension HomeView {
             Image(systemName: "chevron.down")
                 .opacity(
                     vm.sortOption == .rank ||
-                        vm.sortOption == .rankReversed ? 1 : 0
+                    vm.sortOption == .rankReversed ? 1 : 0
                 )
                 .rotationEffect(Angle(degrees: vm.sortOption == .rank ? 0 : 180))
         }
@@ -200,7 +238,7 @@ extension HomeView {
             Image(systemName: "chevron.down")
                 .opacity(
                     vm.sortOption == .holdings ||
-                        vm.sortOption == .holdingsReversed ? 1 : 0
+                    vm.sortOption == .holdingsReversed ? 1 : 0
                 )
                 .rotationEffect(Angle(degrees: vm.sortOption == .holdings ? 0 : 180))
         }
@@ -218,7 +256,7 @@ extension HomeView {
             Image(systemName: "chevron.down")
                 .opacity(
                     vm.sortOption == .price ||
-                        vm.sortOption == .priceReversed ? 1 : 0
+                    vm.sortOption == .priceReversed ? 1 : 0
                 )
                 .rotationEffect(Angle(degrees: vm.sortOption == .price ? 0 : 180))
         }

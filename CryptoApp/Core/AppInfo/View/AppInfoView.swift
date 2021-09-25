@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct AppInfoView: View {
-    @Environment(\.presentationMode) var presentationMode
+    @Environment(\.dismiss) var dismiss
     
     let coinGeckoURL = URL(string: "https://coingecko.com")!
     let personalURL = URL(string: "https://mkwpnz.moe")!
@@ -33,7 +33,7 @@ struct AppInfoView: View {
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     XMarkButton {
-                        presentationMode.wrappedValue.dismiss()
+                        self.dismiss()
                     }
                     .font(.headline)
                 }
