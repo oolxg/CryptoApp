@@ -8,22 +8,23 @@
 import SwiftUI
 
 struct CoinImageView: View {
-    let coin: Coin
+    @StateObject var vm: CoinImageViewModel
+    
+    init(coin: Coin) {
+        _vm = StateObject(wrappedValue: CoinImageViewModel(coin: coin))
+    }
     
     var body: some View {
-        AsyncImage(url: URL(string: coin.image)) { phase in
-            switch phase {
-                case .success(let image):
-                    image
-                        .resizable()
-                        .scaledToFit()
-                case .failure(_):
-                    Image(systemName: "exclamationmark.circle")
-                        .foregroundColor(.red)
-                case .empty:
-                    ProgressView()
-                @unknown default:
-                    fatalError()
+        ZStack {
+            if let image = vm.image {
+                Image(uiImage:  image)
+                    .resizable()
+                    .scaledToFit()
+            } else if vm.isLoading {
+                ProgressView()
+            } else {
+                Image(systemName: "questionmark")
+                    .foregroundColor(.theme.secondaryText)
             }
         }
     }
