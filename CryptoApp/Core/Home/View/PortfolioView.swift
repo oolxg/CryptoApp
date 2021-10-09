@@ -117,13 +117,14 @@ extension PortfolioView {
     
     private var trailingNavbarButton: some View {
         HStack {
-            
             if vm.showCheckmark {
                 Image(systemName: "checkmark")
             }
             
-            if vm.selectedCoin != nil && vm.selectedCoin?.currentHoldings != vm.coinsQuantityText.asDouble() {
+            if let selectedCoin = vm.selectedCoin,
+               selectedCoin.currentHoldings != vm.coinsQuantityText.asDouble() {
                 Button(action: {
+                    print("==== \(selectedCoin.currentHoldings) \(vm.coinsQuantityText.asDouble())_")
                     saveButtonPressed()
                 }, label: {
                     Text("Save".uppercased())

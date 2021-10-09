@@ -62,23 +62,13 @@ class HomeViewModel: ObservableObject {
     // MARK: - Private
     
     private func addSubscribers() {
-        // search in all coins or sort them or load coins from API
+        // search in coins or sort them or load coins from API
         $searchText
             .debounce(for: .seconds(0.5), scheduler: DispatchQueue.main)
             .combineLatest(coinDataService.$allCoins, $sortOption)
             .map(filterAndSortCoins)
             .sink { [weak self] coins in
                 self?.allCoins = coins
-            }
-            .store(in: &cancellables)
-        
-        // search in portfolio coins
-        $searchText
-            .debounce(for: .seconds(0.5), scheduler: DispatchQueue.main)
-            .combineLatest($portfolioCoins, $sortOption)
-            .map(filterAndSortCoins)
-            .sink { [weak self] coins in
-                self?.portfolioCoins = coins
             }
             .store(in: &cancellables)
         
@@ -93,8 +83,7 @@ class HomeViewModel: ObservableObject {
             .store(in: &cancellables)
 
         // update marketData
-        marketDataService
-            .$marketData
+        marketDataService .$marketData
             .combineLatest($portfolioCoins)
             .map(mapGlobalMarketData)
             .sink { [weak self] stats in

@@ -12,7 +12,7 @@ struct AppInfoView: View {
     
     let coinGeckoURL = URL(string: "https://coingecko.com")!
     let personalURL = URL(string: "https://mkwpnz.moe")!
-    let telegegramURL = URL(string: "https://t.me/mkpwnz")!
+    let telegegramURL = URL(string: "tg://resolve?domain=mkpwnz")!
     let githubURL = URL(string: "https://github.com/IceF0xx/")!
     
     var body: some View {
@@ -23,8 +23,6 @@ struct AppInfoView: View {
                 appInfo
                 
                 coinGeckoInfo
-                
-                
             }
             .font(.headline)
             .accentColor(.blue)

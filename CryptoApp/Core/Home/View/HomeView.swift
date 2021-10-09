@@ -115,9 +115,14 @@ extension HomeView {
                     }
                     .swipeActions(allowsFullSwipe: true) {
                         Button(action: {
-                            showPortfolioView = true
-                            vm.selectedCoin = coin
+                            // looks for the coin in user's portfolio
+                            // if the coin in portfolio, we use it to get `.currentHoldings`
+                            let coinFromPortfolio = vm.portfolioCoins.first(where: { $0.id == coin.id })
+                            
+                            vm.selectedCoin = coinFromPortfolio ?? coin
                             vm.searchText = coin.symbol.uppercased()
+                            vm.coinsQuantityText = coinFromPortfolio?.currentHoldings?.asNumberString() ?? ""
+                            showPortfolioView = true
                         }, label: {
                             Image(systemName: "plus")
                         })
