@@ -49,8 +49,8 @@ struct PortfolioView: View {
 
 extension PortfolioView {
     private var searchListCoins: [Coin] {
-        // if there're coins in portfolio and search string is empty, than will be show allCoins,
-        // otherwise will show portfolio coins
+        // if there're coins in portfolio and search string is empty, than will be shown allCoins,
+        // otherwise will portfolio coins
         vm.searchText.isEmpty && !vm.portfolioCoins.isEmpty ? vm.portfolioCoins : vm.allCoins
     }
     
