@@ -119,7 +119,6 @@ extension PortfolioView {
         HStack {
             if vm.showCheckmark {
                 Image(systemName: "checkmark")
-                    .animation(.none, value: vm.showCheckmark)
             }
             
             if let selectedCoin = vm.selectedCoin,
@@ -129,7 +128,6 @@ extension PortfolioView {
                 }, label: {
                     Text("Save".uppercased())
                         .font(.headline)
-                        .animation(.none, value: vm.showCheckmark)
                 })
             }
         }
@@ -154,20 +152,15 @@ extension PortfolioView {
         
         vm.updatePortfolio(coin: coin, amount: amount)
         
-        
-        withAnimation(.easeIn) {
-            vm.showCheckmark = true
-            vm.removeSelectedCoin()
-        }
+        vm.showCheckmark = true
+        vm.removeSelectedCoin()
         
         // hide keyboard
         UIApplication.shared.endEditing()
         
         // hide checkmark
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-            withAnimation(.easeOut) {
-                vm.showCheckmark = false
-            }
+            vm.showCheckmark = false
         }
     }
 
