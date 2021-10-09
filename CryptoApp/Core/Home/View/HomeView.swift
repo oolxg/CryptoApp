@@ -80,7 +80,7 @@ extension HomeView {
                         showSettingsView.toggle()
                     }
                 }
-                .animation(.none)
+                .animation(.none, value: showPortfolio)
                 .background(CircleButtonAnimationView(animate: $showPortfolio))
             
             Spacer()

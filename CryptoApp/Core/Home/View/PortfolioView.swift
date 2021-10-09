@@ -110,7 +110,7 @@ extension PortfolioView {
                 Text(vm.getCurrentValueOfHoldings().asCurrencyWith2Decimals())
             }
         }
-        .animation(.none)
+        .animation(.none, value: 0)
         .padding()
         .font(.headline)
     }
@@ -119,16 +119,17 @@ extension PortfolioView {
         HStack {
             if vm.showCheckmark {
                 Image(systemName: "checkmark")
+                    .animation(.none, value: vm.showCheckmark)
             }
             
             if let selectedCoin = vm.selectedCoin,
                selectedCoin.currentHoldings != vm.coinsQuantityText.asDouble() {
                 Button(action: {
-                    print("==== \(selectedCoin.currentHoldings) \(vm.coinsQuantityText.asDouble())_")
                     saveButtonPressed()
                 }, label: {
                     Text("Save".uppercased())
                         .font(.headline)
+                        .animation(.none, value: vm.showCheckmark)
                 })
             }
         }
