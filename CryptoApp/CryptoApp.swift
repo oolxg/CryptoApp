@@ -30,8 +30,9 @@ struct CryptoApp: App {
                     }
             } else {
                 NavigationView {
-                    HomeView()
-                        .navigationBarHidden(true)
+//                    HomeView()
+//                        .navigationBarHidden(true)
+                    LoginScreen()
                 }
                 .navigationViewStyle(StackNavigationViewStyle())
                 .environmentObject(vm)

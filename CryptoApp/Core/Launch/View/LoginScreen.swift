@@ -1,9 +1,9 @@
-//
-//  LoginScreen.swift
-//  CryptoApp
-//
-//  Created by mk.pwnz on 28.11.2021.
-//
+    //
+    //  LoginScreen.swift
+    //  CryptoApp
+    //
+    //  Created by mk.pwnz on 28.11.2021.
+    //
 
 import SwiftUI
 
@@ -17,25 +17,15 @@ struct LoginScreen: View {
     var body: some View {
         VStack {
             
-            HStack {
-                ForEach(0..<4) { num in
-                    if vm.pincodeInput.count <= num {
-                        Circle()
-                            .stroke()
-                            .frame(width: 13)
-                            .padding(10)
-                            .foregroundColor(.theme.accent)
-                    } else {
-                        Circle()
-                            .frame(width: 13)
-                            .padding(10)
-                            .foregroundColor(.theme.accent)
-                    }
-                    
-                }
-            }
+            inputCircles
+                .opacity(vm.isAuthWithBiometricsAvailable ? 1 : 0)
+                .disabled(vm.isAuthWithBiometricsAvailable)
             
             numpadBlock
+                .disabled(vm.isNumpadDisabled)
+        }
+        .task {
+            await vm.makeBiometricAuth()
         }
     }
 }
@@ -52,7 +42,9 @@ struct LoginScreen_Previews: PreviewProvider {
 extension LoginScreen {
     private var biometricLoginButton: some View {
         Button {
-            
+            Task.init {
+                await vm.makeBiometricAuth()
+            }
         } label: {
             Image(systemName: vm.authIconName )
                 .font(.title)
@@ -72,7 +64,7 @@ extension LoginScreen {
         LazyVGrid(columns: columns) {
             ForEach(1..<10) { num in
                 Button {
-                    vm.pincodeInput.append(num)
+                    vm.numpadButtonWasPressed(number: num)
                 } label: {
                     Text("\(num)")
                         .font(.largeTitle)
@@ -97,7 +89,7 @@ extension LoginScreen {
             
             if vm.pincodeInput.count > 0 {
                 Button {
-                    vm.pincodeInput.removeLast()
+                    vm.numpadRemoveButtonWasPressed()
                 } label: {
                     Image(systemName: "delete.left")
                         .foregroundColor(.theme.accent)
@@ -107,7 +99,38 @@ extension LoginScreen {
                 }
             }
             
-
+            
+        }
+    }
+    
+    private var inputCircles: some View {
+        HStack {
+            ForEach(0..<4) { num in
+                if vm.authStatus == .unathorized {
+                    if vm.pincodeInput.count <= num {
+                        Circle()
+                            .stroke()
+                            .frame(width: 13)
+                            .padding(10)
+                            .foregroundColor(.theme.accent)
+                    } else {
+                        Circle()
+                            .frame(width: 13)
+                            .padding(10)
+                            .foregroundColor(.theme.accent)
+                    }
+                } else if vm.authStatus == .successfullyAuthorized {
+                    Circle()
+                        .frame(width: 13)
+                        .padding(10)
+                        .foregroundColor(.theme.green)
+                } else {
+                    Circle()
+                        .frame(width: 13)
+                        .padding(10)
+                        .foregroundColor(.theme.red)
+                }
+            }
         }
     }
 }
