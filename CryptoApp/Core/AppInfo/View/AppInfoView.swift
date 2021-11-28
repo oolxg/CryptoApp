@@ -13,7 +13,7 @@ struct AppInfoView: View {
     let coinGeckoURL = URL(string: "https://coingecko.com")!
     let personalURL = URL(string: "https://mkwpnz.moe")!
     let telegegramURL = URL(string: "tg://resolve?domain=mkpwnz")!
-    let githubURL = URL(string: "https://github.com/N0leg/")!
+    let githubURL = URL(string: "https://github.com/BlueGlassMoon/")!
     
     var body: some View {
         NavigationView {

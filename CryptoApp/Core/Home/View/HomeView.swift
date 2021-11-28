@@ -9,8 +9,8 @@ import SwiftUI
 
 struct HomeView: View {
     @EnvironmentObject private var vm: HomeViewModel
-    @State private var showPortfolioView: Bool = false // show new sheet
-    @State private var showPortfolio: Bool = false     // animate button
+    @State private var showPortfolioSheet: Bool = false // show new sheet
+    @State private var showPortfolioCoinsList: Bool = false     // animate button
     @State private var showDetailView: Bool = false
     @State private var selectedCoin: Coin? = nil
     @State private var showSettingsView: Bool = false
@@ -20,7 +20,7 @@ struct HomeView: View {
                 // background
             Color.theme.background
                 .ignoresSafeArea()
-                .sheet(isPresented: $showPortfolioView, onDismiss: {
+                .sheet(isPresented: $showPortfolioSheet, onDismiss: {
                     vm.searchText = ""
                     vm.selectedCoin = nil
                 }) {
@@ -31,18 +31,18 @@ struct HomeView: View {
             VStack {
                 homeHeader
                 
-                HomeStatisticView(showPortfolio: $showPortfolio)
+                HomeStatisticView(showPortfolio: $showPortfolioCoinsList)
                 
                 SearchBarView(searchText: $vm.searchText)
                 
                 columnTitles
                 
-                if !showPortfolio {
+                if !showPortfolioCoinsList {
                     allCoinsList
                         .transition(.move(edge: .leading))
                 }
                 
-                if showPortfolio {
+                if showPortfolioCoinsList {
                     ZStack(alignment: .top) {
                         if vm.portfolioCoins.isEmpty && vm.searchText.isEmpty {
                             portfolioEmptyText
@@ -72,20 +72,20 @@ struct HomeView: View {
 extension HomeView {
     private var homeHeader: some View {
         HStack {
-            CircleButtonView(iconName: showPortfolio ? "plus" : "info")
+            CircleButtonView(iconName: showPortfolioCoinsList ? "plus" : "info")
                 .onTapGesture {
-                    if showPortfolio {
-                        showPortfolioView.toggle()
+                    if showPortfolioCoinsList {
+                        showPortfolioSheet.toggle()
                     } else {
                         showSettingsView.toggle()
                     }
                 }
-                .animation(.none, value: showPortfolio)
-                .background(CircleButtonAnimationView(animate: $showPortfolio))
+                .animation(.none, value: showPortfolioCoinsList)
+                .background(CircleButtonAnimationView(animate: $showPortfolioCoinsList))
             
             Spacer()
             
-            Text(showPortfolio ? "Portfolio" : "Live Prices")
+            Text(showPortfolioCoinsList ? "Portfolio" : "Live Prices")
                 .font(.headline)
                 .fontWeight(.heavy)
                 .foregroundColor(.theme.accent)
@@ -94,10 +94,10 @@ extension HomeView {
             Spacer()
             
             CircleButtonView(iconName: "chevron.right")
-                .rotationEffect(Angle(degrees: showPortfolio ? 180 : 0))
+                .rotationEffect(Angle(degrees: showPortfolioCoinsList ? 180 : 0))
                 .onTapGesture {
                     withAnimation(.spring()) {
-                        showPortfolio.toggle()
+                        showPortfolioCoinsList.toggle()
                     }
                 }
         }
@@ -114,16 +114,7 @@ extension HomeView {
                         segue(coin: coin)
                     }
                     .swipeActions(allowsFullSwipe: true) {
-                        Button(action: {
-                            // looks for the coin in user's portfolio
-                            // if the coin in portfolio, we use it to get `.currentHoldings`
-                            let coinFromPortfolio = vm.portfolioCoins.first(where: { $0.id == coin.id })
-                            
-                            vm.selectedCoin = coinFromPortfolio ?? coin
-                            vm.searchText = coin.symbol.uppercased()
-                            vm.coinsQuantityText = coinFromPortfolio?.currentHoldings?.asNumberString() ?? ""
-                            showPortfolioView = true
-                        }, label: {
+                        Button(action: { addCoinOnSwipeAction(coin: coin) }, label: {
                             Image(systemName: "plus")
                         })
                             .tint(.green)
@@ -153,12 +144,7 @@ extension HomeView {
                         })
                         .tint(.red)
                         
-                        Button(action: {
-                            showPortfolioView = true
-                            vm.selectedCoin = coin
-                            vm.searchText = coin.symbol.uppercased()
-                            vm.coinsQuantityText = coin.currentHoldings?.asNumberString() ?? ""
-                        }, label: {
+                        Button(action: { editCoinOnSwipeAction(coin: coin) }, label: {
                             Image(systemName: "gear")
                         })
                        
@@ -170,6 +156,24 @@ extension HomeView {
         .refreshable {
             vm.reloadData()
         }
+    }
+    
+    private func addCoinOnSwipeAction(coin: Coin) {
+        // looks for the coin in user's portfolio
+        // if the coin in portfolio, we use it to get `.currentHoldings`
+        let coinFromPortfolio = vm.portfolioCoins.first(where: { $0.id == coin.id })
+        
+        vm.selectedCoin = coinFromPortfolio ?? coin
+        vm.searchText = coin.symbol.uppercased()
+        vm.coinsQuantityText = coinFromPortfolio?.currentHoldings?.asNumberString() ?? ""
+        showPortfolioSheet = true
+    }
+    
+    private func editCoinOnSwipeAction(coin: Coin) {
+        showPortfolioSheet = true
+        vm.selectedCoin = coin
+        vm.searchText = coin.symbol.uppercased()
+        vm.coinsQuantityText = coin.currentHoldings?.asNumberString() ?? ""
     }
     
     private func removeCoinsFromPortfolio(at offsets: IndexSet) {
@@ -199,7 +203,7 @@ extension HomeView {
             
             Spacer()
             
-            if showPortfolio {
+            if showPortfolioCoinsList {
                 columnTitleHoldings
             }
             
