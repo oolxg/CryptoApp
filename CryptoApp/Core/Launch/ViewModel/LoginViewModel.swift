@@ -22,7 +22,7 @@ class LoginViewModel: ObservableObject {
     }
     
     var isAuthWithBiometricsAvailable: Bool {
-        failedLoginWithBiometricsCount < 3
+        failedLoginWithBiometricsCount < 3 && LAContext().biometricType != .none
     }
     
     var isNumpadDisabled: Bool {
