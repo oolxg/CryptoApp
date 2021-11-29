@@ -86,7 +86,7 @@ class LoginViewModel: ObservableObject {
         pincodeInput.removeLast()
     }
     
-        // MARK: - Private
+    // MARK: - Private
     
     private func makeAuthWithPincodeInput() {
         

@@ -95,10 +95,8 @@ extension LoginScreen {
                     .font(.largeTitle)
                     .padding(.horizontal, 5)
                     .padding(.vertical, 25)
-                    .invisible()
+                    .invisible(vm.isRemoveButtonAvailable)
             }
-            
-            
         }
     }
     

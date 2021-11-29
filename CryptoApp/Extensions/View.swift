@@ -13,6 +13,6 @@ extension View {
     func invisible(_ isVisible: Bool = false) -> some View {
         self
             .opacity(isVisible ? 1 : 0)
-            .disabled(isVisible)
+            .disabled(!isVisible)
     }
 }
