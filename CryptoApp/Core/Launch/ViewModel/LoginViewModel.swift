@@ -18,7 +18,7 @@ class LoginViewModel: ObservableObject {
     
     // MARK: - Computable variables
     var authIconName: String {
-        LAContext().biometryType == .faceID ? "faceid" : "touchid"
+        LAContext().biometricType == .faceID ? "faceid" : "touchid"
     }
     
     var isAuthWithBiometricsAvailable: Bool {
