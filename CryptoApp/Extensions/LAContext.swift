@@ -1,9 +1,9 @@
-    //
-    //  LAContext.swift
-    //  CryptoApp
-    //
-    //  Created by mk.pwnz on 29.11.2021.
-    //
+//
+//  LAContext.swift
+//  CryptoApp
+//
+//  Created by mk.pwnz on 29.11.2021.
+//
 
 import Foundation
 import LocalAuthentication
@@ -31,6 +31,7 @@ extension LAContext {
                 case .faceID:
                     return .faceID
                 @unknown default:
+                    #warning("Handle new Biometric type")
             }
         }
         
