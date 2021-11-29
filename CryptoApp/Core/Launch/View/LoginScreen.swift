@@ -1,9 +1,9 @@
-    //
-    //  LoginScreen.swift
-    //  CryptoApp
-    //
-    //  Created by mk.pwnz on 28.11.2021.
-    //
+//
+//  LoginScreen.swift
+//  CryptoApp
+//
+//  Created by mk.pwnz on 28.11.2021.
+//
 
 import SwiftUI
 
@@ -87,16 +87,15 @@ extension LoginScreen {
                     .foregroundColor(.white)
             }
             
-            if vm.pincodeInput.count > 0 {
-                Button {
-                    vm.numpadRemoveButtonWasPressed()
-                } label: {
-                    Image(systemName: "delete.left")
-                        .foregroundColor(.theme.accent)
-                        .font(.largeTitle)
-                        .padding(.horizontal, 5)
-                        .padding(.vertical, 25)
-                }
+            Button {
+                vm.numpadRemoveButtonWasPressed()
+            } label: {
+                Image(systemName: "delete.left")
+                    .foregroundColor(.theme.accent)
+                    .font(.largeTitle)
+                    .padding(.horizontal, 5)
+                    .padding(.vertical, 25)
+                    .invisible()
             }
             
             
@@ -118,17 +117,20 @@ extension LoginScreen {
                             .frame(width: 13)
                             .padding(10)
                             .foregroundColor(.theme.accent)
+                            .scaleEffect(vm.scaleAmountsForCirles[num])
                     }
                 } else if vm.authStatus == .successfullyAuthorized {
                     Circle()
                         .frame(width: 13)
                         .padding(10)
                         .foregroundColor(.theme.green)
+                        .scaleEffect(vm.scaleAmountsForCirles[num])
                 } else {
                     Circle()
                         .frame(width: 13)
                         .padding(10)
                         .foregroundColor(.theme.red)
+                        .scaleEffect(vm.scaleAmountsForCirles[num])
                 }
             }
         }

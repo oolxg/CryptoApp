@@ -8,26 +8,36 @@
 import Foundation
 import Combine
 import LocalAuthentication
+import SwiftUI
 
 class LoginViewModel: ObservableObject {
+    @Published var authStatus: AuthStatus = .unathorized
+    @Published private(set) var pincodeInput: [String] = []
+    @Published private(set) var failedLoginWithBiometricsCount: Int = 0
+    @Published var scaleAmountsForCirles = [1.0, 1.0, 1.0, 1.0]
+    
+    // MARK: - Computable variables
+    var authIconName: String {
+        LAContext().biometryType == .faceID ? "faceid" : "touchid"
+    }
+    
+    var isAuthWithBiometricsAvailable: Bool {
+        failedLoginWithBiometricsCount < 3
+    }
+    
+    var isNumpadDisabled: Bool {
+        pincodeInput.count == 4 || authStatus == .successfullyAuthorized
+    }
+    
+    var isRemoveButtonAvailable: Bool {
+        pincodeInput.count > 0 && authStatus == .unathorized
+    }
+    // MARK: - Computable variables end
+    
     enum AuthStatus {
         case successfullyAuthorized, unathorized, wrongPassword
     }
     
-    @Published var authStatus: AuthStatus = .unathorized
-    @Published private(set) var pincodeInput: [String] = []
-    @Published private(set) var failedLoginWithBiometricsCount: Int = 0
-    
-    var isNumpadDisabled: Bool {
-        pincodeInput.count == 4
-    }
-    private var cancellables = Set<AnyCancellable>()
-    var authIconName: String {
-        LAContext().biometryType == .faceID ? "faceid" : "touchid"
-    }
-    var isAuthWithBiometricsAvailable: Bool {
-        failedLoginWithBiometricsCount < 3 
-    }
     
     func makeBiometricAuth() async {
         let scanner = LAContext()
@@ -41,14 +51,30 @@ class LoginViewModel: ObservableObject {
         }
         
         if isAuthorizedWithBiometices {
-            authStatus = .successfullyAuthorized
+            DispatchQueue.main.async {
+                self.authStatus = .successfullyAuthorized
+                self.pincodeInput = "0000".components(separatedBy: "")
+            }
+            
         }
         
     }
     
     func numpadButtonWasPressed(number: Int) {
+        let circleNumber = pincodeInput.count
         HapticManager.notification(type: .warning)
         pincodeInput.append(String(number))
+        
+        withAnimation(.linear(duration: 0.2)) {
+            scaleAmountsForCirles[circleNumber] = 1.8
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+            withAnimation(.linear(duration: 0.2)) {
+                self.scaleAmountsForCirles[circleNumber] = 1.0
+            }
+        }
+        
         
         if pincodeInput.count == 4 {
             makeAuthWithPincodeInput()
@@ -63,9 +89,10 @@ class LoginViewModel: ObservableObject {
         // MARK: - Private
     
     private func makeAuthWithPincodeInput() {
-        print("makeAuthFromPincodeInput called")
+        
+        guard authStatus == .unathorized else { return }
+        
         let pincode = pincodeInput.joined()
-        print(pincode)
         if pincode == "1111" {
             print("success")
             authStatus = .successfullyAuthorized
