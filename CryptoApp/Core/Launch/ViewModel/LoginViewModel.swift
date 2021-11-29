@@ -15,9 +15,11 @@ class LoginViewModel: ObservableObject {
     @Published private(set) var pincodeInput: [String] = []
     @Published private(set) var failedLoginWithBiometricsCount: Int = 0
     @Published var scaleAmountsForCirles = [1.0, 1.0, 1.0, 1.0]
+    @Binding private var isSuccessfullyAuthorized: Bool
+    private var authSubscription: AnyCancellable? = nil
     
     // MARK: - Computable variables
-    var authIconName: String {
+    var biometryAuthIconName: String {
         LAContext().biometricType == .faceID ? "faceid" : "touchid"
     }
     
@@ -38,6 +40,10 @@ class LoginViewModel: ObservableObject {
         case successfullyAuthorized, unathorized, wrongPassword
     }
     
+    init(isSuccessfullyAuthorized: Binding<Bool>) {
+        self._isSuccessfullyAuthorized = isSuccessfullyAuthorized
+        addSubscriptions()
+    }
     
     func makeBiometricAuth() async {
         let scanner = LAContext()
@@ -55,9 +61,7 @@ class LoginViewModel: ObservableObject {
                 self.authStatus = .successfullyAuthorized
                 self.pincodeInput = "0000".components(separatedBy: "")
             }
-            
         }
-        
     }
     
     func numpadButtonWasPressed(number: Int) {
@@ -88,19 +92,29 @@ class LoginViewModel: ObservableObject {
     
     // MARK: - Private
     
+    private func addSubscriptions() {
+        authSubscription = $authStatus
+            .sink(receiveValue: { authStatus in
+                if authStatus == .successfullyAuthorized {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + Double.random(in: 0.4..<0.9)) {
+                        self.isSuccessfullyAuthorized = true
+                    }
+                }
+            })
+            
+    }
+    
     private func makeAuthWithPincodeInput() {
         
         guard authStatus == .unathorized else { return }
         
         let pincode = pincodeInput.joined()
         if pincode == "1111" {
-            print("success")
             authStatus = .successfullyAuthorized
             pincodeInput.removeAll()
         } else {
-            print("fail")
             authStatus = .wrongPassword
-            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                 self.authStatus = .unathorized
                 self.pincodeInput.removeAll()
             }

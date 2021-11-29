@@ -11,6 +11,7 @@ import SwiftUI
 struct CryptoApp: App {
     @StateObject private var vm = HomeViewModel()
     @State private var showLaunchScreen = true
+    @State private var isSuccessfullyAuthorized = false
     
     init() {
         UINavigationBar.appearance().largeTitleTextAttributes = [.foregroundColor: UIColor(.theme.accent)]
@@ -28,11 +29,12 @@ struct CryptoApp: App {
                             }
                         }
                     }
+            } else if isSuccessfullyAuthorized != true {
+                LoginScreen(isSuccessfullyAuthorized: $isSuccessfullyAuthorized)
             } else {
                 NavigationView {
-//                    HomeView()
-//                        .navigationBarHidden(true)
-                    LoginScreen()
+                    HomeView()
+                        .navigationBarHidden(true)
                 }
                 .navigationViewStyle(StackNavigationViewStyle())
                 .environmentObject(vm)

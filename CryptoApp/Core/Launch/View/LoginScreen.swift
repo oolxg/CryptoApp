@@ -8,18 +8,24 @@
 import SwiftUI
 
 struct LoginScreen: View {
+    @ObservedObject var vm: LoginViewModel
+    @Binding var isSuccessfullyAuthorized: Bool
+
     private let columns: [GridItem] = [
         GridItem(.flexible(minimum: 65, maximum: 95)),
         GridItem(.flexible(minimum: 65, maximum: 95)),
         GridItem(.flexible(minimum: 65, maximum: 95))
     ]
-    @ObservedObject var vm: LoginViewModel = .init()
+    
+    init(isSuccessfullyAuthorized: Binding<Bool>) {
+        _vm = .init(wrappedValue: LoginViewModel(isSuccessfullyAuthorized: isSuccessfullyAuthorized))
+        _isSuccessfullyAuthorized = isSuccessfullyAuthorized
+    }
+    
     var body: some View {
         VStack {
             
             inputCircles
-                .opacity(vm.isAuthWithBiometricsAvailable ? 1 : 0)
-                .disabled(vm.isAuthWithBiometricsAvailable)
             
             numpadBlock
                 .disabled(vm.isNumpadDisabled)
@@ -32,7 +38,7 @@ struct LoginScreen: View {
 
 struct LoginScreen_Previews: PreviewProvider {
     static var previews: some View {
-        LoginScreen()
+        LoginScreen(isSuccessfullyAuthorized: .constant(false))
             .preferredColorScheme(.dark)
         
     }
@@ -46,7 +52,7 @@ extension LoginScreen {
                 await vm.makeBiometricAuth()
             }
         } label: {
-            Image(systemName: vm.authIconName )
+            Image(systemName: vm.biometryAuthIconName )
                 .font(.title)
                 .foregroundColor(.theme.accent)
                 .background(Color.theme.background)
