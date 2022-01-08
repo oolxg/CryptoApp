@@ -14,7 +14,7 @@ class LoginViewModel: ObservableObject {
     @Published var authStatus: AuthStatus = .unathorized
     @Published private(set) var pincodeInput: [String] = []
     @Published private(set) var failedLoginWithBiometricsCount: Int = 0
-    @Published var scaleAmountsForCirles = [1.0, 1.0, 1.0, 1.0]
+    @Published private(set) var scaleAmountsForCirles = [1.0, 1.0, 1.0, 1.0]
     @Binding private var isSuccessfullyAuthorized: Bool
     private var authSubscription: AnyCancellable? = nil
     
@@ -65,20 +65,10 @@ class LoginViewModel: ObservableObject {
     }
     
     func numpadButtonWasPressed(number: Int) {
-        let circleNumber = pincodeInput.count
         HapticManager.notification(type: .warning)
         pincodeInput.append(String(number))
         
-        withAnimation(.linear(duration: 0.2)) {
-            scaleAmountsForCirles[circleNumber] = 1.8
-        }
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-            withAnimation(.linear(duration: 0.2)) {
-                self.scaleAmountsForCirles[circleNumber] = 1.0
-            }
-        }
-        
+        makeCirclePulsate()
         
         if pincodeInput.count == 4 {
             makeAuthWithPincodeInput()
@@ -96,7 +86,7 @@ class LoginViewModel: ObservableObject {
         authSubscription = $authStatus
             .sink(receiveValue: { authStatus in
                 if authStatus == .successfullyAuthorized {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + Double.random(in: 0.4..<0.9)) {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + Double.random(in: 0.9..<1.6)) {
                         self.isSuccessfullyAuthorized = true
                     }
                 }
@@ -117,6 +107,20 @@ class LoginViewModel: ObservableObject {
             DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                 self.authStatus = .unathorized
                 self.pincodeInput.removeAll()
+            }
+        }
+    }
+    
+    private func makeCirclePulsate(position: Int? = nil) {
+        let circlePosition = position == nil ? pincodeInput.count - 1 : position!
+
+        withAnimation(.linear(duration: 0.2)) {
+            scaleAmountsForCirles[circlePosition] = 1.8
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+            withAnimation(.linear(duration: 0.2)) {
+                self.scaleAmountsForCirles[circlePosition] = 1.0
             }
         }
     }

@@ -110,33 +110,34 @@ extension LoginScreen {
         HStack {
             ForEach(0..<4) { num in
                 if vm.authStatus == .unathorized {
-                    if vm.pincodeInput.count <= num {
-                        Circle()
-                            .stroke()
-                            .frame(width: 13)
-                            .padding(10)
-                            .foregroundColor(.theme.accent)
-                    } else {
-                        Circle()
-                            .frame(width: 13)
-                            .padding(10)
-                            .foregroundColor(.theme.accent)
-                            .scaleEffect(vm.scaleAmountsForCirles[num])
-                    }
+                    // `vm.pincodeInput.count <= num` checks the position of the circle and the number of entered numbers
+                    // if positin of th cricle is bigger, then number of entered numbers, the circle must be "empty"(stroke)
+                    inputCircle(isStroke: vm.pincodeInput.count <= num, foregroundColor: .theme.accent)
+                        .scaleEffect(vm.scaleAmountsForCirles[num])
                 } else if vm.authStatus == .successfullyAuthorized {
-                    Circle()
-                        .frame(width: 13)
-                        .padding(10)
-                        .foregroundColor(.theme.green)
+                    inputCircle(foregroundColor: .theme.green)
                         .scaleEffect(vm.scaleAmountsForCirles[num])
                 } else {
-                    Circle()
-                        .frame(width: 13)
-                        .padding(10)
-                        .foregroundColor(.theme.red)
+                    inputCircle(foregroundColor: .theme.red)
                         .scaleEffect(vm.scaleAmountsForCirles[num])
                 }
             }
         }
+    }
+    
+    @ViewBuilder private func inputCircle(isStroke: Bool = false, foregroundColor: Color) -> some View {
+        if isStroke {
+            Circle()
+                .stroke()
+                .frame(width: 13)
+                .padding(10)
+                .foregroundColor(foregroundColor)
+        } else {
+            Circle()
+                .frame(width: 13)
+                .padding(10)
+                .foregroundColor(foregroundColor)
+        }
+
     }
 }
