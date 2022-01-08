@@ -70,6 +70,7 @@ extension AppInfoView {
                 Image("coingecko")
                     .resizable()
                     .frame(height: 100)
+                    .scaledToFit()
                     .clipShape(RoundedRectangle(cornerRadius: 20))
                 
                 Text("Thanks to CoinGecko, whose free API was used in this app.")

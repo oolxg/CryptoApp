@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		220F07542789429700BCE994 /* LoginScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 220F07532789429700BCE994 /* LoginScreen.swift */; };
+		220F0757278942A100BCE994 /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 220F0756278942A100BCE994 /* LoginViewModel.swift */; };
+		220F0759278942C400BCE994 /* LAContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 220F0758278942C400BCE994 /* LAContext.swift */; };
+		220F075B278942DA00BCE994 /* View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 220F075A278942DA00BCE994 /* View.swift */; };
 		2242EE0E26765D7200003011 /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2242EDDE26765D7200003011 /* HomeViewModel.swift */; };
 		2242EE0F26765D7200003011 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2242EDE026765D7200003011 /* HomeView.swift */; };
 		2242EE1026765D7200003011 /* HomeStatisticView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2242EDE126765D7200003011 /* HomeStatisticView.swift */; };
@@ -50,6 +54,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		220F07532789429700BCE994 /* LoginScreen.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginScreen.swift; sourceTree = "<group>"; };
+		220F0756278942A100BCE994 /* LoginViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
+		220F0758278942C400BCE994 /* LAContext.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LAContext.swift; sourceTree = "<group>"; };
+		220F075A278942DA00BCE994 /* View.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = View.swift; sourceTree = "<group>"; };
 		2242EDDE26765D7200003011 /* HomeViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
 		2242EDE026765D7200003011 /* HomeView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		2242EDE126765D7200003011 /* HomeStatisticView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeStatisticView.swift; sourceTree = "<group>"; };
@@ -105,6 +113,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		220F0755278942A100BCE994 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				220F0756278942A100BCE994 /* LoginViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
 		2242EDDA26765D7200003011 /* CryptoApp */ = {
 			isa = PBXGroup;
 			children = (
@@ -223,9 +239,11 @@
 				2242EDF626765D7200003011 /* PreviewProvider.swift */,
 				2242EDF726765D7200003011 /* String.swift */,
 				2242EDF826765D7200003011 /* Double.swift */,
+				220F0758278942C400BCE994 /* LAContext.swift */,
 				2242EDF926765D7200003011 /* UIApplication.swift */,
 				2242EDFA26765D7200003011 /* Color.swift */,
 				22E3C5E72677B87200FFF3BF /* Date.swift */,
+				220F075A278942DA00BCE994 /* View.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -300,6 +318,7 @@
 			isa = PBXGroup;
 			children = (
 				22F9A07A26E51FF30059BC1C /* View */,
+				220F0755278942A100BCE994 /* ViewModel */,
 			);
 			path = Launch;
 			sourceTree = "<group>";
@@ -309,6 +328,7 @@
 			children = (
 				22F9A07E26E521C30059BC1C /* LaunchScreen.storyboard */,
 				22F9A08026E522E00059BC1C /* LaunchView.swift */,
+				220F07532789429700BCE994 /* LoginScreen.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -408,11 +428,15 @@
 				2242EE0E26765D7200003011 /* HomeViewModel.swift in Sources */,
 				2242EE2D26765D7200003011 /* CoinDataService.swift in Sources */,
 				2242EE2226765D7200003011 /* Color.swift in Sources */,
+				220F075B278942DA00BCE994 /* View.swift in Sources */,
+				220F07542789429700BCE994 /* LoginScreen.swift in Sources */,
 				2242EE0F26765D7200003011 /* HomeView.swift in Sources */,
+				220F0757278942A100BCE994 /* LoginViewModel.swift in Sources */,
 				2242EE1E26765D7200003011 /* PreviewProvider.swift in Sources */,
 				2242EE1F26765D7200003011 /* String.swift in Sources */,
 				2242EE1C26765D7200003011 /* DetailView.swift in Sources */,
 				2242EE2026765D7200003011 /* Double.swift in Sources */,
+				220F0759278942C400BCE994 /* LAContext.swift in Sources */,
 				2242EE2A26765D7200003011 /* CoinDetail.swift in Sources */,
 				2242EE2826765D7200003011 /* PortfolioContainer.xcdatamodeld in Sources */,
 				2242EE1626765D7200003011 /* CoinLogoView.swift in Sources */,
@@ -550,7 +574,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 8567F46TJ3;
+				DEVELOPMENT_TEAM = HJ9678T652;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = CryptoApp/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
@@ -571,7 +595,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 8567F46TJ3;
+				DEVELOPMENT_TEAM = HJ9678T652;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = CryptoApp/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
