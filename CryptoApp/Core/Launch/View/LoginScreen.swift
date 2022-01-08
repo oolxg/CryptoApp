@@ -84,7 +84,7 @@ extension LoginScreen {
             biometricLoginButton
             
             Button {
-                
+                vm.numpadButtonWasPressed(number: 0)
             } label: {
                 Text("0")
                     .font(.largeTitle)
