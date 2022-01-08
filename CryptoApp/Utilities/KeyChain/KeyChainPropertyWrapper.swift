@@ -13,7 +13,7 @@ struct KeyChain: DynamicProperty {
     @State var data: Data?
     
     var wrappedValue: Data? {
-        get { data }
+        get { KeyChainHelper.shared.read(key: key, forAccount: account ) }
         set {
             guard let newData = newValue else {
                 // if setting data to `nil`
@@ -23,6 +23,7 @@ struct KeyChain: DynamicProperty {
                 return
             }
             KeyChainHelper.shared.save(data: newData, forKey: key, account: account)
+            data = newData
         }
     }
     
