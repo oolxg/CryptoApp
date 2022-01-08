@@ -10,9 +10,9 @@ import SwiftUI
 
 
 extension View {
-    func invisible(_ isVisible: Bool = false) -> some View {
+    func hidden(_ isHidden: Bool = false) -> some View {
         self
-            .opacity(isVisible ? 1 : 0)
-            .disabled(!isVisible)
+            .opacity(isHidden ? 0 : 1)
+            .disabled(isHidden)
     }
 }

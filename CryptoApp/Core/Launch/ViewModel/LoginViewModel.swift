@@ -16,6 +16,7 @@ class LoginViewModel: ObservableObject {
     @Published private(set) var failedLoginWithBiometricsCount: Int = 0
     @Published private(set) var scaleAmountsForCirles = [1.0, 1.0, 1.0, 1.0]
     @Binding private var isSuccessfullyAuthorized: Bool
+    @KeyChain(key: "user_pincode", account: "CryptoApp") private var userPincode
     private var authSubscription: AnyCancellable? = nil
     
     // MARK: - Computable variables
@@ -31,8 +32,8 @@ class LoginViewModel: ObservableObject {
         pincodeInput.count == 4 || authStatus == .successfullyAuthorized
     }
     
-    var isRemoveButtonAvailable: Bool {
-        pincodeInput.count > 0 && authStatus == .unathorized
+    var isRemoveButtonHidden: Bool {
+        pincodeInput.count == 0 || authStatus != .unathorized
     }
     // MARK: - Computable variables end
     
@@ -97,11 +98,18 @@ class LoginViewModel: ObservableObject {
     private func makeAuthWithPincodeInput() {
         
         guard authStatus == .unathorized else { return }
+        guard let userPincodeString = userPincode?.asString() else {
+            print("ERROR getting pincode from Key Chain")
+            return
+        }
         
         let pincode = pincodeInput.joined()
-        if pincode == "1111" {
-            authStatus = .successfullyAuthorized
-            pincodeInput.removeAll()
+        if pincode == userPincodeString {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.7) {
+                self.authStatus = .successfullyAuthorized
+                self.pincodeInput.removeAll()
+            }
+            
         } else {
             authStatus = .wrongPassword
             DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
