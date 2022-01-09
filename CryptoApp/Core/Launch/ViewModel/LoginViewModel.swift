@@ -16,7 +16,7 @@ class LoginViewModel: ObservableObject {
     @Published private(set) var failedLoginWithBiometricsCount: Int = 0
     @Published private(set) var scaleAmountsForCirles = [1.0, 1.0, 1.0, 1.0]
     @Binding private var isSuccessfullyAuthorized: Bool
-    @KeyChain(key: "user_pincode", account: "CryptoApp") private var userPincode
+    @KeyChain(key: Constants.KeyChain.pincodeKey, account: Constants.KeyChain.account) private var userPincode
     private var authSubscription: AnyCancellable? = nil
     
     // MARK: - Computable variables
@@ -24,8 +24,8 @@ class LoginViewModel: ObservableObject {
         LAContext().biometricType == .faceID ? "faceid" : "touchid"
     }
     
-    var isAuthWithBiometricsAvailable: Bool {
-        failedLoginWithBiometricsCount < 3 && LAContext().biometricType != .none
+    var isMionetryAuthDisabled: Bool {
+        failedLoginWithBiometricsCount >= 3 || LAContext().biometricType == .none
     }
     
     var isNumpadDisabled: Bool {
@@ -54,7 +54,7 @@ class LoginViewModel: ObservableObject {
         do {
             isAuthorizedWithBiometices = try await scanner.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: "To unlock your crypto portfolio")
         } catch {
-            print("Failed to make auth with biometrics")
+            print("Failed to make auth with biometrics: \(error.localizedDescription)")
         }
         
         if isAuthorizedWithBiometices {
@@ -78,7 +78,9 @@ class LoginViewModel: ObservableObject {
     
     func numpadRemoveButtonWasPressed() {
         HapticManager.notification(type: .warning)
-        pincodeInput.removeLast()
+        if pincodeInput.count > 0 {
+            pincodeInput.removeLast()
+        }
     }
     
     // MARK: - Private

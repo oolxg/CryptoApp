@@ -62,6 +62,7 @@ extension LoginScreen {
                         .stroke()
                         .foregroundColor(.theme.accent)
                 )
+                .hidden(vm.isMionetryAuthDisabled)
             
         }
     }
