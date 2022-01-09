@@ -13,7 +13,7 @@ import SwiftUI
 class LoginViewModel: ObservableObject {
     @Published var authStatus: AuthStatus = .unathorized
     @Published private(set) var pincodeInput: [String] = []
-    @Published private(set) var failedLoginWithBiometricsCount: Int = 0
+    @Published private(set) var failedLoginWithBiometrics: Int = 0
     @Published private(set) var scaleAmountsForCirles = [1.0, 1.0, 1.0, 1.0]
     @Binding private var isSuccessfullyAuthorized: Bool
     @KeyChain(key: Constants.KeyChain.pincodeKey, account: Constants.KeyChain.account) private var userPincode
@@ -25,7 +25,7 @@ class LoginViewModel: ObservableObject {
     }
     
     var isMionetryAuthDisabled: Bool {
-        failedLoginWithBiometricsCount >= 3 || LAContext().biometricType == .none
+        failedLoginWithBiometrics >= 3 || LAContext().biometricType == .none
     }
     
     var isNumpadDisabled: Bool {
@@ -53,8 +53,11 @@ class LoginViewModel: ObservableObject {
         
         do {
             isAuthorizedWithBiometices = try await scanner.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: "To unlock your crypto portfolio")
+        } catch LAError.authenticationFailed {
+            failedLoginWithBiometrics += 1
+            print("User gave wrong Biometric credentials")
         } catch {
-            print("Failed to make auth with biometrics: \(error.localizedDescription)")
+            printLAError(error)
         }
         
         if isAuthorizedWithBiometices {
@@ -84,6 +87,31 @@ class LoginViewModel: ObservableObject {
     }
     
     // MARK: - Private
+    
+    private func printLAError(_ error: Error) {
+        switch error {
+            case LAError.appCancel:
+                print("Authentication was cancelled by application")
+            case LAError.authenticationFailed:
+                print("The user failed to provide valid credentials")
+            case LAError.invalidContext:
+                print("The context is invalid")
+            case LAError.passcodeNotSet:
+                print("Passcode is not set on the device")
+            case LAError.systemCancel:
+                print("Authentication was cancelled by the system")
+            case LAError.biometryLockout:
+                print("Too many failed attempts.")
+            case LAError.biometryNotAvailable:
+                print("Biometry is not available on the device")
+            case LAError.userCancel:
+                print("The user did cancel")
+            case LAError.userFallback:
+                print("The user chose to use the fallback")
+            default:
+                print("Did not find error code on LAError object")
+        }
+    }
     
     private func addSubscriptions() {
         authSubscription = $authStatus
