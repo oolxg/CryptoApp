@@ -21,8 +21,7 @@ class CoinDetailDataService {
     }
     
     func getCoinDetails() {
-        guard let url = URL(string: "https://api.coingecko.com/api/v3/coins/\(coin.id)?localization=false&tickers=false&market_data=false&community_data=false&developer_data=false&sparkline=false")
-        else { return }
+        guard let url = getCoinDetailsURL(for: coin) else { return }
         
         coinDetailSubscription = NetworkManager.download(from: url)
             .decode(type: CoinDetail.self, decoder: JSONDecoder())
@@ -33,5 +32,20 @@ class CoinDetailDataService {
                     self.coinDetail = returndeCoinDetail
                     self.coinDetailSubscription?.cancel()
                   })
+    }
+    
+    private func getCoinDetailsURL(for coin: Coin) -> URL? {
+        guard var components = URLComponents(string: "https://api.coingecko.com/api/v3/coins/\(coin.id)") else { return nil }
+        
+        components.queryItems = [
+            URLQueryItem(name: "localization", value: "false"),
+            URLQueryItem(name: "tickers", value: "false"),
+            URLQueryItem(name: "market_data", value: "false"),
+            URLQueryItem(name: "community_data", value: "false"),
+            URLQueryItem(name: "developer_data", value: "false"),
+            URLQueryItem(name: "sparkline", value: "false")
+        ]
+        
+        return components.url
     }
 }
