@@ -11,30 +11,7 @@ import Combine
 class CoinDetailDataService {
     let coin: Coin
     
-    @Published var coinDetail: CoinDetail? = nil
-    
-    private var coinDetailSubscription: AnyCancellable?
-    
-    init(coin: Coin) {
-        self.coin = coin
-        getCoinDetails()
-    }
-    
-    func getCoinDetails() {
-        guard let url = getCoinDetailsURL(for: coin) else { return }
-        
-        coinDetailSubscription = NetworkManager.download(from: url)
-            .decode(type: CoinDetail.self, decoder: JSONDecoder())
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: NetworkManager.handleCompletion,
-                  receiveValue: { [weak self] returndeCoinDetail in
-                    guard let self = self else { return }
-                    self.coinDetail = returndeCoinDetail
-                    self.coinDetailSubscription?.cancel()
-                  })
-    }
-    
-    private func getCoinDetailsURL(for coin: Coin) -> URL? {
+    private var coinDetailsAPIurl: URL? {
         guard var components = URLComponents(string: "https://api.coingecko.com/api/v3/coins/\(coin.id)") else { return nil }
         
         components.queryItems = [
@@ -48,4 +25,28 @@ class CoinDetailDataService {
         
         return components.url
     }
+    
+    @Published var coinDetail: CoinDetail? = nil
+    
+    private var coinDetailSubscription: AnyCancellable?
+    
+    init(coin: Coin) {
+        self.coin = coin
+        getCoinDetails()
+    }
+    
+    func getCoinDetails() {
+        guard let url = coinDetailsAPIurl else { return }
+        
+        coinDetailSubscription = NetworkManager.download(from: url)
+            .decode(type: CoinDetail.self, decoder: JSONDecoder())
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: NetworkManager.handleCompletion,
+                  receiveValue: { [weak self] returndeCoinDetail in
+                    guard let self = self else { return }
+                    self.coinDetail = returndeCoinDetail
+                    self.coinDetailSubscription?.cancel()
+                  })
+    }
+    
 }
