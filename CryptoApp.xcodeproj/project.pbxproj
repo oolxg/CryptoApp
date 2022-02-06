@@ -14,6 +14,10 @@
 		220F075D278943F500BCE994 /* Data.swift in Sources */ = {isa = PBXBuildFile; fileRef = 220F075C278943F500BCE994 /* Data.swift */; };
 		220F07602789447A00BCE994 /* KeyChainHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 220F075F2789447900BCE994 /* KeyChainHelper.swift */; };
 		220F07622789467200BCE994 /* KeyChainPropertyWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 220F07612789467200BCE994 /* KeyChainPropertyWrapper.swift */; };
+		220F07652789C84000BCE994 /* AppInfoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 220F07642789C84000BCE994 /* AppInfoViewModel.swift */; };
+		220F07672789C8A000BCE994 /* SettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 220F07662789C8A000BCE994 /* SettingView.swift */; };
+		220F07692789F8A400BCE994 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 220F07682789F8A400BCE994 /* Constants.swift */; };
+		2234FEDA27B080B400CE25F3 /* HUD.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2234FED927B080B400CE25F3 /* HUD.swift */; };
 		2242EE0E26765D7200003011 /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2242EDDE26765D7200003011 /* HomeViewModel.swift */; };
 		2242EE0F26765D7200003011 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2242EDE026765D7200003011 /* HomeView.swift */; };
 		2242EE1026765D7200003011 /* HomeStatisticView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2242EDE126765D7200003011 /* HomeStatisticView.swift */; };
@@ -64,6 +68,10 @@
 		220F075C278943F500BCE994 /* Data.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Data.swift; sourceTree = "<group>"; };
 		220F075F2789447900BCE994 /* KeyChainHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyChainHelper.swift; sourceTree = "<group>"; };
 		220F07612789467200BCE994 /* KeyChainPropertyWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyChainPropertyWrapper.swift; sourceTree = "<group>"; };
+		220F07642789C84000BCE994 /* AppInfoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppInfoViewModel.swift; sourceTree = "<group>"; };
+		220F07662789C8A000BCE994 /* SettingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingView.swift; sourceTree = "<group>"; };
+		220F07682789F8A400BCE994 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		2234FED927B080B400CE25F3 /* HUD.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HUD.swift; sourceTree = "<group>"; };
 		2242EDDE26765D7200003011 /* HomeViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
 		2242EDE026765D7200003011 /* HomeView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		2242EDE126765D7200003011 /* HomeStatisticView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeStatisticView.swift; sourceTree = "<group>"; };
@@ -127,19 +135,28 @@
 			path = ViewModel;
 			sourceTree = "<group>";
 		};
-		220F075E2789446D00BCE994 /* KeycChain */ = {
+		220F075E2789446D00BCE994 /* KeyChain */ = {
 			isa = PBXGroup;
 			children = (
 				220F075F2789447900BCE994 /* KeyChainHelper.swift */,
 				220F07612789467200BCE994 /* KeyChainPropertyWrapper.swift */,
 			);
-			path = KeycChain;
+			path = KeyChain;
+			sourceTree = "<group>";
+		};
+		220F07632789C82300BCE994 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				220F07642789C84000BCE994 /* AppInfoViewModel.swift */,
+			);
+			path = ViewModel;
 			sourceTree = "<group>";
 		};
 		2242EDDA26765D7200003011 /* CryptoApp */ = {
 			isa = PBXGroup;
 			children = (
 				2242EE0626765D7200003011 /* CryptoApp.swift */,
+				220F07682789F8A400BCE994 /* Constants.swift */,
 				2242EDF526765D7200003011 /* Extensions */,
 				2242EDFB26765D7200003011 /* Utilities */,
 				2242EE0826765D7200003011 /* Services */,
@@ -194,6 +211,7 @@
 		2242EDE426765D7200003011 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				224C488627B073C800D877A3 /* HUD */,
 				2242EDE526765D7200003011 /* StatisticView.swift */,
 				2242EDE626765D7200003011 /* CircleButton */,
 				2242EDE926765D7200003011 /* CoinImage */,
@@ -267,7 +285,7 @@
 		2242EDFB26765D7200003011 /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
-				220F075E2789446D00BCE994 /* KeycChain */,
+				220F075E2789446D00BCE994 /* KeyChain */,
 				2242EDFC26765D7200003011 /* LocalFileManager.swift */,
 				2242EDFD26765D7200003011 /* HapticManager.swift */,
 				2242EDFE26765D7200003011 /* NetworkManager.swift */,
@@ -299,6 +317,14 @@
 			path = Services;
 			sourceTree = "<group>";
 		};
+		224C488627B073C800D877A3 /* HUD */ = {
+			isa = PBXGroup;
+			children = (
+				2234FED927B080B400CE25F3 /* HUD.swift */,
+			);
+			path = HUD;
+			sourceTree = "<group>";
+		};
 		22560768265D5E77008D47F5 = {
 			isa = PBXGroup;
 			children = (
@@ -318,6 +344,7 @@
 		22F421B42686689900C2D8BF /* AppInfo */ = {
 			isa = PBXGroup;
 			children = (
+				220F07632789C82300BCE994 /* ViewModel */,
 				22F421B5268668A200C2D8BF /* View */,
 			);
 			path = AppInfo;
@@ -327,6 +354,7 @@
 			isa = PBXGroup;
 			children = (
 				22F421B6268668F400C2D8BF /* AppInfoView.swift */,
+				220F07662789C8A000BCE994 /* SettingView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -419,13 +447,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2234FEDA27B080B400CE25F3 /* HUD.swift in Sources */,
 				2242EE2526765D7200003011 /* NetworkManager.swift in Sources */,
 				2242EE1126765D7200003011 /* CoinRowView.swift in Sources */,
 				2242EE1326765D7200003011 /* StatisticView.swift in Sources */,
 				22E3C5E62677B04800FFF3BF /* ChartView.swift in Sources */,
 				2242EE1426765D7200003011 /* CircleButtonView.swift in Sources */,
 				2242EE2626765D7200003011 /* CoinModel.swift in Sources */,
+				220F07652789C84000BCE994 /* AppInfoViewModel.swift in Sources */,
 				22F421B7268668F400C2D8BF /* AppInfoView.swift in Sources */,
+				220F07672789C8A000BCE994 /* SettingView.swift in Sources */,
 				22F9A08126E522E00059BC1C /* LaunchView.swift in Sources */,
 				2242EE1A26765D7200003011 /* XMarkButton.swift in Sources */,
 				22E3C5E82677B87200FFF3BF /* Date.swift in Sources */,
@@ -440,6 +471,7 @@
 				2242EE2426765D7200003011 /* HapticManager.swift in Sources */,
 				2242EE2126765D7200003011 /* UIApplication.swift in Sources */,
 				2242EE1726765D7200003011 /* CoinImageViewModel.swift in Sources */,
+				220F07692789F8A400BCE994 /* Constants.swift in Sources */,
 				2242EE1B26765D7200003011 /* DetailViewModel.swift in Sources */,
 				2242EE1026765D7200003011 /* HomeStatisticView.swift in Sources */,
 				2242EE0E26765D7200003011 /* HomeViewModel.swift in Sources */,
