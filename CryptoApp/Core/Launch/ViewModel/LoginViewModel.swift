@@ -53,7 +53,9 @@ class LoginViewModel: ObservableObject {
         do {
             isAuthorizedWithBiometices = try await scanner.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: "To unlock your crypto portfolio")
         } catch {
-            failedLoginWithBiometrics += 1
+            DispatchQueue.main.async {
+                self.failedLoginWithBiometrics += 1
+            }
             printLAError(error)
         }
         
