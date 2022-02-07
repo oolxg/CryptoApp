@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct LaunchView: View {
+    @EnvironmentObject var vm: LoginViewModel
     @State private var loadingText = "Loading coins..."
     @State private var textOpacity = 1.0
     
@@ -28,6 +29,10 @@ struct LaunchView: View {
                     .opacity(textOpacity)
             }
             .onAppear {
+                Task {
+                    await vm.makeBiometricAuth()
+                }
+                
                 withAnimation(.linear(duration: 1.3).repeatForever(autoreverses: true)) {
                     textOpacity = 0.6
                 }

@@ -8,19 +8,13 @@
 import SwiftUI
 
 struct LoginScreen: View {
-    @ObservedObject var vm: LoginViewModel
-    @Binding var isSuccessfullyAuthorized: Bool
+    @EnvironmentObject var vm: LoginViewModel
 
     private let columns: [GridItem] = [
         GridItem(.flexible(minimum: 65, maximum: 95)),
         GridItem(.flexible(minimum: 65, maximum: 95)),
         GridItem(.flexible(minimum: 65, maximum: 95))
     ]
-    
-    init(isSuccessfullyAuthorized: Binding<Bool>) {
-        _vm = .init(wrappedValue: LoginViewModel(isSuccessfullyAuthorized: isSuccessfullyAuthorized))
-        _isSuccessfullyAuthorized = isSuccessfullyAuthorized
-    }
     
     var body: some View {
         VStack {
@@ -38,8 +32,11 @@ struct LoginScreen: View {
 
 struct LoginScreen_Previews: PreviewProvider {
     static var previews: some View {
-        LoginScreen(isSuccessfullyAuthorized: .constant(false))
+        LoginScreen()
             .preferredColorScheme(.dark)
+        
+        LoginScreen()
+            .preferredColorScheme(.light)
         
     }
 }
@@ -77,7 +74,7 @@ extension LoginScreen {
                         .font(.largeTitle)
                         .padding(.horizontal, 5)
                         .padding(.vertical, 25)
-                        .foregroundColor(.white)
+                        .foregroundColor(.theme.accent)
                 }
                 
             }
@@ -91,7 +88,7 @@ extension LoginScreen {
                     .font(.largeTitle)
                     .padding(.horizontal, 5)
                     .padding(.vertical, 25)
-                    .foregroundColor(.white)
+                    .foregroundColor(.theme.accent)
             }
             
             Button {

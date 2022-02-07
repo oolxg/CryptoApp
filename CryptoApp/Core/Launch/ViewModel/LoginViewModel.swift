@@ -11,13 +11,13 @@ import LocalAuthentication
 import SwiftUI
 
 class LoginViewModel: ObservableObject {
-    @Published var authStatus: AuthStatus = .unathorized
+    @Published private(set) var authStatus: AuthStatus = .unathorized
     @Published private(set) var pincodeInput: [String] = []
     @Published private(set) var failedLoginWithBiometrics: Int = 0
     @Published private(set) var scaleAmountsForCirles = [1.0, 1.0, 1.0, 1.0]
-    @Binding private var isSuccessfullyAuthorized: Bool
+    @Published private(set) var isSuccessfullyAuthorized: Bool = false
     @KeyChain(key: Constants.KeyChain.pincodeKey, account: Constants.KeyChain.account) private var userPincode
-    private var authSubscription: AnyCancellable? = nil
+    private var cancellables = Set<AnyCancellable>()
     
     // MARK: - Computable variables
     var biometryAuthIconName: String {
@@ -41,8 +41,7 @@ class LoginViewModel: ObservableObject {
         case successfullyAuthorized, unathorized, wrongPassword
     }
     
-    init(isSuccessfullyAuthorized: Binding<Bool>) {
-        self._isSuccessfullyAuthorized = isSuccessfullyAuthorized
+    init() {
         addSubscriptions()
     }
     
@@ -53,15 +52,13 @@ class LoginViewModel: ObservableObject {
         
         do {
             isAuthorizedWithBiometices = try await scanner.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: "To unlock your crypto portfolio")
-        } catch LAError.authenticationFailed {
-            failedLoginWithBiometrics += 1
-            print("User gave wrong Biometric credentials")
         } catch {
+            failedLoginWithBiometrics += 1
             printLAError(error)
         }
         
         if isAuthorizedWithBiometices {
-            DispatchQueue.main.async {
+            DispatchQueue.main.asyncAfter(deadline: .now() + Double.random(in: 0.4..<0.6)) {
                 self.authStatus = .successfullyAuthorized
                 self.pincodeInput = "0000".components(separatedBy: "")
             }
@@ -114,14 +111,14 @@ class LoginViewModel: ObservableObject {
     }
     
     private func addSubscriptions() {
-        authSubscription = $authStatus
+        $authStatus
+            .filter { $0 == .successfullyAuthorized }
             .sink(receiveValue: { authStatus in
-                if authStatus == .successfullyAuthorized {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + Double.random(in: 0.9..<1.6)) {
-                        self.isSuccessfullyAuthorized = true
-                    }
+                DispatchQueue.main.asyncAfter(deadline: .now() + Double.random(in: 0.6..<1.0)) {
+                    self.isSuccessfullyAuthorized = true
                 }
             })
+            .store(in: &cancellables)
             
     }
     

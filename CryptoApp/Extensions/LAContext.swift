@@ -32,7 +32,7 @@ extension LAContext {
                 case .faceID:
                     return .faceID
                 @unknown default:
-                    #warning("Handle new Biometric type")
+                    fatalError("The new biometry type was added. Should handle it")
             }
         }
         

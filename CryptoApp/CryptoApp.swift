@@ -9,10 +9,9 @@ import SwiftUI
 
 @main
 struct CryptoApp: App {
-    @StateObject private var vm = HomeViewModel()
+    @StateObject private var homeVM = HomeViewModel()
     @StateObject private var hudState = HUDState()
-    @State private var showLaunchScreen = true
-    @State private var isSuccessfullyAuthorized = false
+    @StateObject private var loginVM = LoginViewModel()
     
     init() {
         UINavigationBar.appearance().largeTitleTextAttributes = [.foregroundColor: UIColor(.theme.accent)]
@@ -22,24 +21,19 @@ struct CryptoApp: App {
     var body: some Scene {
         WindowGroup {
             ZStack {
-                if showLaunchScreen {
+                if loginVM.failedLoginWithBiometrics == 0 && !loginVM.isSuccessfullyAuthorized {
                     LaunchView()
-                        .onAppear {
-                            DispatchQueue.main.asyncAfter(deadline: .now() + Double.random(in: 0.5..<1.8)) {
-                                withAnimation(.linear(duration: 0.5)) {
-                                    showLaunchScreen = false
-                                }
-                            }
-                        }
-                } else if isSuccessfullyAuthorized != true {
-                    LoginScreen(isSuccessfullyAuthorized: $isSuccessfullyAuthorized)
+                        .environmentObject(loginVM)
+                } else if !loginVM.isSuccessfullyAuthorized {
+                    LoginScreen()
+                        .environmentObject(loginVM)
                 } else {
                     NavigationView {
                         HomeView()
                             .navigationBarHidden(true)
                     }
                     .navigationViewStyle(StackNavigationViewStyle())
-                    .environmentObject(vm)
+                    .environmentObject(homeVM)
                 }
              }
             .hud(isPresented: $hudState.isPresented, text: hudState.text, iconName: hudState.iconName, hideAfter: hudState.duration)
