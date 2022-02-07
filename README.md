@@ -1,5 +1,5 @@
 
-# CrytpoApp
+# CryptoApp
 This app show cryptocurrencies with help of free CoinGecko API. You can track different coins, 
 save them and be on the peak of all crypto news(will be added soon).
 This application was completely written in SwiftUI, using Combine framework.  
