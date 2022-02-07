@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		22097AE027B0926B008C98DF /* HUDState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22097ADF27B0926B008C98DF /* HUDState.swift */; };
 		220F07542789429700BCE994 /* LoginScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 220F07532789429700BCE994 /* LoginScreen.swift */; };
 		220F0757278942A100BCE994 /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 220F0756278942A100BCE994 /* LoginViewModel.swift */; };
 		220F0759278942C400BCE994 /* LAContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 220F0758278942C400BCE994 /* LAContext.swift */; };
@@ -61,6 +62,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		22097ADF27B0926B008C98DF /* HUDState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HUDState.swift; sourceTree = "<group>"; };
 		220F07532789429700BCE994 /* LoginScreen.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginScreen.swift; sourceTree = "<group>"; };
 		220F0756278942A100BCE994 /* LoginViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
 		220F0758278942C400BCE994 /* LAContext.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LAContext.swift; sourceTree = "<group>"; };
@@ -321,6 +323,7 @@
 			isa = PBXGroup;
 			children = (
 				2234FED927B080B400CE25F3 /* HUD.swift */,
+				22097ADF27B0926B008C98DF /* HUDState.swift */,
 			);
 			path = HUD;
 			sourceTree = "<group>";
@@ -452,6 +455,7 @@
 				2242EE1126765D7200003011 /* CoinRowView.swift in Sources */,
 				2242EE1326765D7200003011 /* StatisticView.swift in Sources */,
 				22E3C5E62677B04800FFF3BF /* ChartView.swift in Sources */,
+				22097AE027B0926B008C98DF /* HUDState.swift in Sources */,
 				2242EE1426765D7200003011 /* CircleButtonView.swift in Sources */,
 				2242EE2626765D7200003011 /* CoinModel.swift in Sources */,
 				220F07652789C84000BCE994 /* AppInfoViewModel.swift in Sources */,

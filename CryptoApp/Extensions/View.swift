@@ -16,17 +16,13 @@ extension View {
         }
     }
     
-    func hud<Content: View>(isPresented: Binding<Bool>,
-                            transition: AnyTransition = .move(edge: .top).combined(with: .opacity),
-                            hideAfter hideInterval: Double = 3,
-                            @ViewBuilder content: @escaping () -> Content) -> some View {
+    func hud(isPresented: Binding<Bool>, text: String, iconName: String? = nil, transition: AnyTransition = .move(edge: .top).combined(with: .opacity), hideAfter hideInterval: Double = 5) -> some View {
         ZStack(alignment: .top) {
             self
             
             if isPresented.wrappedValue {
-                HUD {
-                    content()
-                }
+                HUD(text: text, iconName: iconName)
+                    .zIndex(1)
                     .transition(transition)
                     .onAppear {
                         DispatchQueue.main.asyncAfter(deadline: .now() + hideInterval) {
@@ -35,7 +31,15 @@ extension View {
                             }
                         }
                     }
-                .zIndex(1)
+                    .gesture(DragGesture(minimumDistance: 0, coordinateSpace: .local)
+                                .onEnded({ value in
+                        if value.translation.height < 0 {
+                            // if swipe up - dismiss HUD
+                            withAnimation {
+                                isPresented.wrappedValue = false
+                            }
+                        }
+                    }))
                 
             }
         }
