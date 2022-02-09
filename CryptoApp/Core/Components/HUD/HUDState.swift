@@ -16,11 +16,17 @@ final class HUDState: ObservableObject {
     private(set) var text: String = ""
     private(set) var duration: Double = 5
     private(set) var iconName: String? = nil
+    private(set) var backgroundColor: Color = .theme.red
     
-    func show(text: String, iconName: String? = nil, withDuration duration: Double = 5) {
+    static var shared: HUDState = HUDState()
+    
+    private init () { }
+    
+    func show(text: String, iconName: String? = nil, withDuration duration: Double = 5, backgroundColor: Color = .theme.red) {
         self.text = text
         self.duration = duration
         self.iconName = iconName
+        self.backgroundColor = backgroundColor
         withAnimation {
             isPresented = true
         }

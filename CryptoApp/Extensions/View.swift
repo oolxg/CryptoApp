@@ -16,12 +16,12 @@ extension View {
         }
     }
     
-    func hud(isPresented: Binding<Bool>, text: String, iconName: String? = nil, transition: AnyTransition = .move(edge: .top).combined(with: .opacity), hideAfter hideInterval: Double = 5) -> some View {
+    func hud(isPresented: Binding<Bool>, text: String, iconName: String? = nil, transition: AnyTransition = .move(edge: .top).combined(with: .opacity), hideAfter hideInterval: Double, backgroundColor: Color) -> some View {
         ZStack(alignment: .top) {
             self
             
             if isPresented.wrappedValue {
-                HUD(text: text, iconName: iconName)
+                HUD(text: text, iconName: iconName, backgroundColor: backgroundColor)
                     .zIndex(1)
                     .transition(transition)
                     .onAppear {

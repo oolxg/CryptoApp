@@ -10,7 +10,7 @@ import SwiftUI
 @main
 struct CryptoApp: App {
     @StateObject private var homeVM = HomeViewModel()
-    @StateObject private var hudState = HUDState()
+    @StateObject private var hudState = HUDState.shared
     @StateObject private var loginVM = LoginViewModel()
     
     init() {
@@ -36,8 +36,7 @@ struct CryptoApp: App {
                     .environmentObject(homeVM)
                 }
              }
-            .hud(isPresented: $hudState.isPresented, text: hudState.text, iconName: hudState.iconName, hideAfter: hudState.duration)
-            .environmentObject(hudState)
+            .hud(isPresented: $hudState.isPresented, text: hudState.text, iconName: hudState.iconName, hideAfter: hudState.duration, backgroundColor: hudState.backgroundColor)
         }
     }
 }

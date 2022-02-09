@@ -9,7 +9,6 @@ import SwiftUI
 
 struct HomeView: View {
     @EnvironmentObject private var vm: HomeViewModel
-    @EnvironmentObject private var hudState: HUDState
     @State private var showPortfolioSheet: Bool = false // show new sheet
     @State private var showPortfolioCoinsList: Bool = false     // animate button
     @State private var showSettingsView: Bool = false

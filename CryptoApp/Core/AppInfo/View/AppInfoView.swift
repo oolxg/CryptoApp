@@ -8,23 +8,35 @@
 import SwiftUI
 
 struct AppInfoView: View {
+    @Environment(\.dismiss) private var dismiss
+
     let coinGeckoURL = URL(string: "https://coingecko.com")!
     let personalURL = URL(string: "https://mkwpnz.moe")!
     let telegegramURL = URL(string: "tg://resolve?domain=mkpwnz")!
     let githubURL = URL(string: "https://github.com/BlueGlassMoon/")!
     
     var body: some View {
-        List {
-            developerInfo
-            
-            appInfo
-            
-            coinGeckoInfo
+        NavigationView {
+            List {
+                developerInfo
+                
+                appInfo
+                
+                coinGeckoInfo
+            }
+            .font(.headline)
+            .accentColor(.blue)
+            .listStyle(GroupedListStyle())
+            .navigationTitle("About")
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    XMarkButton {
+                        self.dismiss()
+                    }
+                    .font(.headline)
+                }
+            }
         }
-        .font(.headline)
-        .accentColor(.blue)
-        .listStyle(GroupedListStyle())
-        .navigationTitle("About")
     }
 }
 

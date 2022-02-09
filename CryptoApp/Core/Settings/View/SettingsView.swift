@@ -9,9 +9,8 @@ import SwiftUI
 
 struct SettingsView: View {
     @Environment(\.dismiss) private var dismiss
-
-    @EnvironmentObject private var hudState: HUDState
     @StateObject private var vm = SettingsViewModel()
+    @State private var showAppInfoView: Bool = false
     
     var body: some View {
         NavigationView {
@@ -39,9 +38,12 @@ struct SettingsView: View {
                     }
                     
                     Section {
-                        NavigationLink("About") {
-                            AppInfoView()
+                        Button("About") {
+                            showAppInfoView.toggle()
                         }
+                    }
+                    .sheet(isPresented: $showAppInfoView) {
+                        AppInfoView()
                     }
                 }
             }
