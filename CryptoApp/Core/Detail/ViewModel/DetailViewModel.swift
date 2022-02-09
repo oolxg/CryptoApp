@@ -58,7 +58,7 @@ class DetailViewModel: ObservableObject {
     }
     
     private func createOverview(coinDetail: CoinDetail?) -> [Statistic] {
-        let price = coin.currentPrice.asCurrencyWith6Decimals()
+        let price = coin.currentPrice > 10 ? coin.currentPrice.asCurrencyWith2Decimals() : coin.currentPrice.asCurrencyWith6Decimals()
         let pricePercentChange = coin.priceChangePercentage24H
         let priceStat = Statistic(title: "Current Price", value: price, percentageChange: pricePercentChange)
         
@@ -81,13 +81,13 @@ class DetailViewModel: ObservableObject {
     }
     
     private func createDetailsForCoin(coin: Coin, coinDetail: CoinDetail?) -> [Statistic] {
-        let high = coin.high24H?.asCurrencyWith6Decimals() ?? "N/A"
+        let high = (coin.high24H ?? 0) > 10 ? coin.high24H?.asCurrencyWith2Decimals() ?? "N/A" : coin.high24H?.asCurrencyWith6Decimals() ?? "N/A"
         let highStat = Statistic(title: "High 24h", value: high)
         
-        let low = coin.low24H?.asCurrencyWith6Decimals() ?? "N/A"
+        let low = (coin.low24H ?? 0) > 10 ? coin.low24H?.asCurrencyWith2Decimals() ?? "N/A" : coin.low24H?.asCurrencyWith6Decimals() ?? "N/A"
         let lowStat = Statistic(title: "Low 24h", value: low)
         
-        let priceChange = coin.priceChange24H?.asCurrencyWith6Decimals() ?? "N/A"
+        let priceChange = (coin.priceChange24H ?? 0) > 10 ? coin.priceChange24H?.asCurrencyWith2Decimals() ?? "N/A" : coin.priceChange24H?.asCurrencyWith6Decimals() ?? "N/A"
         let pricePercentChange = coin.priceChangePercentage24H
         let priceChangeStat = Statistic(title: "24h Price Change", value: priceChange, percentageChange: pricePercentChange)
         
