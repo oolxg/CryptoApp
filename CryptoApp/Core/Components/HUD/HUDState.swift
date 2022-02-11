@@ -8,8 +8,7 @@
 import Foundation
 import SwiftUI
 
-// TODO: rewrite all the things here to title: , text:
-// No more Content, i'm fucking tired
+
 
 final class HUDState: ObservableObject {
     @Published var isPresented: Bool = false
