@@ -25,7 +25,7 @@ struct LoginScreen: View {
                 .disabled(vm.isNumpadDisabled)
         }
         .task {
-            await vm.makeBiometricAuth()
+            await vm.tryMakeBiometryAuth()
         }
     }
 }
@@ -43,13 +43,13 @@ struct LoginScreen_Previews: PreviewProvider {
 
 
 extension LoginScreen {
-    private var biometricLoginButton: some View {
+    private var biometryLoginButton: some View {
         Button {
-            Task.init {
-                await vm.makeBiometricAuth()
+            Task {
+                await vm.tryMakeBiometryAuth()
             }
         } label: {
-            Image(systemName: vm.biometryAuthIconName )
+            Image(systemName: vm.biometryAuthIconName)
                 .font(.title)
                 .foregroundColor(.theme.accent)
                 .background(Color.theme.background)
@@ -59,7 +59,7 @@ extension LoginScreen {
                         .stroke()
                         .foregroundColor(.theme.accent)
                 )
-                .hidden(vm.isMionetryAuthDisabled)
+                .hidden(!vm.isBiometryAuthAvailable)
             
         }
     }
@@ -79,7 +79,7 @@ extension LoginScreen {
                 
             }
             
-            biometricLoginButton
+            biometryLoginButton
             
             Button {
                 vm.numpadButtonWasPressed(number: 0)

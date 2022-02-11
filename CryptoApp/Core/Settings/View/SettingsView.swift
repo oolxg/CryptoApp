@@ -22,6 +22,7 @@ struct SettingsView: View {
                     Section {
                         NavigationLink(destination: {
                             PrivacySettingsView()
+                                .environmentObject(vm)
                         }) {
                             Label("Privacy and security", systemImage: "hand.raised.fill")
                                 .labelStyle(ColorfulIconLabelStyle(color: .blue))

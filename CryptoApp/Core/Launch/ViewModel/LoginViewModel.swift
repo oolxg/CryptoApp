@@ -17,15 +17,23 @@ class LoginViewModel: ObservableObject {
     @Published private(set) var scaleAmountsForCirles = [1.0, 1.0, 1.0, 1.0]
     @Published private(set) var isSuccessfullyAuthorized: Bool = false
     @KeyChain(key: Constants.KeyChain.pincodeKey, account: Constants.KeyChain.account) private var userPincode
+    @AppStorage(Constants.AppSettings.Privacy.isPasswordSecurityActive) private var isPasswordSecurityActive: Bool = false
+    @AppStorage(Constants.AppSettings.Privacy.useBiometryToUnlock) private var useBiometryToUnlock: Bool = false
+    @AppStorage(Constants.AppSettings.Privacy.lastActiveSessionTimestamp) private var lastActiveSessionTimestamp: Double = Date().timeIntervalSince1970
+
+    
+    // indicates launchView status
+    // normally if 'useBiometryToUnlock' == false after 0.5..<0.8 seconds this screens disappears
+    @Published private(set) var _shouldShowLaunchView: Bool = true
     private var cancellables = Set<AnyCancellable>()
     
-    // MARK: - Computable variables
+    // MARK: - Computed variables
     var biometryAuthIconName: String {
         LAContext().biometricType == .faceID ? "faceid" : "touchid"
     }
     
-    var isMionetryAuthDisabled: Bool {
-        failedLoginWithBiometrics >= 3 || LAContext().biometricType == .none
+    var isBiometryAuthAvailable: Bool {
+        useBiometryToUnlock && failedLoginWithBiometrics < 3 && LAContext().biometricType != .none
     }
     
     var isNumpadDisabled: Bool {
@@ -35,7 +43,15 @@ class LoginViewModel: ObservableObject {
     var isRemoveButtonHidden: Bool {
         pincodeInput.count == 0 || authStatus != .unathorized
     }
-    // MARK: - Computable variables end
+    
+    var shouldShowLaunchView: Bool {
+        failedLoginWithBiometrics == 0 && !isSuccessfullyAuthorized && _shouldShowLaunchView
+    }
+    
+    var shouldShowLoginView: Bool {
+        !isSuccessfullyAuthorized && isPasswordSecurityActive
+    }
+    // MARK: - Computed variables end
     
     enum AuthStatus {
         case successfullyAuthorized, unathorized, wrongPassword
@@ -43,9 +59,36 @@ class LoginViewModel: ObservableObject {
     
     init() {
         addSubscriptions()
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + Double.random(in: 0.5..<0.8)) {
+            if !self.useBiometryToUnlock {
+                self._shouldShowLaunchView = false
+            }
+            
+            // if there's no password, user is authorized as he opens the app
+            if !self.isPasswordSecurityActive {
+                self.authStatus = .successfullyAuthorized
+            }
+        }
     }
     
-    func makeBiometricAuth() async {
+    func handleNewScenePhase(_ newScenePhase: ScenePhase) {
+        switch newScenePhase {
+            case .inactive:
+                lastActiveSessionTimestamp = Date().timeIntervalSince1970
+            case .background, .active:
+                break
+            @unknown default:
+                fatalError("New type of scenePhase. Must handle it!")
+        }
+    }
+    
+    func tryMakeBiometryAuth() async {
+        guard useBiometryToUnlock else {
+            print("User disabled biometry auth in app settings")
+            return
+        }
+        
         let scanner = LAContext()
         
         var isAuthorizedWithBiometices = false
@@ -115,10 +158,10 @@ class LoginViewModel: ObservableObject {
     private func addSubscriptions() {
         $authStatus
             .filter { $0 == .successfullyAuthorized }
-            .sink(receiveValue: { authStatus in
-                DispatchQueue.main.asyncAfter(deadline: .now() + Double.random(in: 0.6..<1.0)) {
-                    self.isSuccessfullyAuthorized = true
-                }
+            .debounce(for: .seconds(Double.random(in: 0.6..<1.0)), scheduler: RunLoop.main)
+            .sink(receiveValue: { [weak self] authStatus in
+                guard let self = self else { return }
+                self.isSuccessfullyAuthorized = true
             })
             .store(in: &cancellables)
             

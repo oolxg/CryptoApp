@@ -12,6 +12,8 @@ struct CryptoApp: App {
     @StateObject private var homeVM = HomeViewModel()
     @StateObject private var hudState = HUDState.shared
     @StateObject private var loginVM = LoginViewModel()
+    @Environment(\.scenePhase) private var scenePhase
+
     
     init() {
         UINavigationBar.appearance().largeTitleTextAttributes = [.foregroundColor: UIColor(.theme.accent)]
@@ -21,10 +23,10 @@ struct CryptoApp: App {
     var body: some Scene {
         WindowGroup {
             ZStack {
-                if loginVM.failedLoginWithBiometrics == 0 && !loginVM.isSuccessfullyAuthorized {
+                if loginVM.shouldShowLaunchView {
                     LaunchView()
                         .environmentObject(loginVM)
-                } else if !loginVM.isSuccessfullyAuthorized {
+                } else if loginVM.shouldShowLoginView {
                     LoginScreen()
                         .environmentObject(loginVM)
                 } else {
@@ -37,6 +39,7 @@ struct CryptoApp: App {
                 }
              }
             .hud(isPresented: $hudState.isPresented, text: hudState.text, iconName: hudState.iconName, hideAfter: hudState.duration, backgroundColor: hudState.backgroundColor)
+            .onChange(of: scenePhase, perform: loginVM.handleNewScenePhase)
         }
     }
 }
