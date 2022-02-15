@@ -277,7 +277,7 @@ extension HomeView {
     }
 }
 
-struct Home_Previews: PreviewProvider {
+class Home_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
             HomeView()
@@ -285,4 +285,13 @@ struct Home_Previews: PreviewProvider {
         }
         .environmentObject(dev.homeVM)
     }
+
+
+    #if DEBUG
+    @objc class func injected() {
+        let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene
+        windowScene?.windows.first?.rootViewController =
+                UIHostingController(rootView: Self.previews)
+    }
+    #endif
 }
