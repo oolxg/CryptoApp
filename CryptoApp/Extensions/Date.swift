@@ -23,6 +23,7 @@ extension Date {
         let formatter = DateFormatter()
         
         formatter.dateStyle = .short
+        formatter.dateFormat = "dd/MM/yy"
         
         return formatter
     }
